@@ -19,10 +19,6 @@ export function MockBadge() {
       </div>
     )
   }
-  return (
-    <p className="text-ink-muted">
-      Live: concepts via {data.conceptProvider === 'anthropic' ? 'Claude' : 'OpenAI'}, images via {data.imageModel} ({data.imageSize},{' '}
-      {data.imageQuality}).
-    </p>
-  )
+  // Live mode shows nothing; the absence of the mock notice is the signal.
+  return null
 }
