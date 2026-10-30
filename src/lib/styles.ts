@@ -1,4 +1,4 @@
-export type StyleId = 'clay' | 'vector' | 'cartoon' | 'amigurumi' | 'plush'
+export type StyleId = 'clay' | 'vector' | 'cartoon' | 'amigurumi' | 'plush' | 'felted' | 'vinyl' | 'feltcut'
 
 export interface ArtStyle {
   id: StyleId
@@ -40,6 +40,24 @@ export const STYLES: ArtStyle[] = [
     label: 'Plush toy',
     prompt:
       'Soft stuffed plush toy photographed like a product shot: short velvety fur, slightly squashed huggable shape, embroidered eyes and nose, tiny stitched smile, felt accessories for props, gentle even studio lighting with soft shadows. The background is one single flat solid pastel colour, completely plain, no gradient, no fabric, no table, no scenery, no lettering.',
+  },
+  {
+    id: 'felted',
+    label: 'Needle felt',
+    prompt:
+      'Needle-felted wool figure, fuzzy matted wool texture with visible loose fibres, slightly lumpy handmade shape, chubby rounded body, tiny black bead eyes, small felted smile, felt and wool props, photographed with soft even lighting like a craft product shot. The background is one single flat solid pastel colour, completely plain, no gradient, no table, no scenery, no lettering.',
+  },
+  {
+    id: 'vinyl',
+    label: 'Vinyl toy',
+    prompt:
+      'Designer vinyl art toy, smooth glossy plastic surface with soft highlights, oversized head on a tiny body, large simple eyes, minimal face, clean rounded forms, props moulded as glossy plastic accessories, studio product lighting. The background is one single flat solid colour, completely plain, no gradient, no shelf, no scenery, no lettering.',
+  },
+  {
+    id: 'feltcut',
+    label: 'Felt cut-outs',
+    prompt:
+      'Flat layered felt cut-out illustration, soft fabric texture, simple rounded shapes stacked in layers with visible blanket-stitch edges and tiny button eyes, gentle drop shadows between layers, warm storybook colours. The background is one single flat solid felt colour, completely plain, no gradient, no pattern, no scenery, no lettering.',
   },
 ]
 

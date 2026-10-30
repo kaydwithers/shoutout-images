@@ -66,6 +66,9 @@ const PALETTE: Record<ArtStyle['id'], { bg: string; fg: string; accent: string }
   cartoon: { bg: '#fce7f3', fg: '#831843', accent: '#ec4899' },
   amigurumi: { bg: '#dcfce7', fg: '#14532d', accent: '#22c55e' },
   plush: { bg: '#ede9fe', fg: '#4c1d95', accent: '#a78bfa' },
+  felted: { bg: '#fef9c3', fg: '#713f12', accent: '#eab308' },
+  vinyl: { bg: '#cffafe', fg: '#164e63', accent: '#06b6d4' },
+  feltcut: { bg: '#ffedd5', fg: '#7c2d12', accent: '#f97316' },
 }
 
 /** A placeholder SVG so the whole UI can be exercised without an image API key. */

@@ -11,7 +11,7 @@ Personal prototype. Runs locally, or on Render or Railway behind a password (see
 
 1. **Ideas.** Claude Haiku 5.5 (or an OpenAI text model as fallback) lists the concrete details in the shoutout (the dinner, the city, the day), then writes five fully formed visual gags on a randomly chosen scene type, each using at least two of those details, with a punny caption for each. A cute animal picked at random stands in for the person, who is never named or depicted. Results people have marked as loved are passed in as examples of the taste to aim for.
 2. **Pick.** The five gags are shown with the model's recommendation marked. You choose one (or take the recommendation, or ask for five more). An optional "make sure it includes" box forces a detail into every idea.
-3. **Paint.** OpenAI's `gpt-image-2.5-flare` renders the chosen gag in one of five cute house styles, clay figurine, flat vector sticker, cute cartoon, crocheted amigurumi, or plush toy, always on a single flat solid-colour background and with no text in the image. Rendering runs as a background job that the page polls every two seconds, so a slow render never trips a hosting proxy's request timeout.
+3. **Paint.** OpenAI's `gpt-image-2.5-flare` renders the chosen gag in one of eight cute house styles, clay figurine, flat vector sticker, cute cartoon, crocheted amigurumi, plush toy, needle felt, vinyl toy, or felt cut-outs, always on a single flat solid-colour background and with no text in the image. Rendering runs as a background job that the page polls every two seconds, so a slow render never trips a hosting proxy's request timeout.
 4. **Share.** The result shows the caption and the shoutout under the image. "Copy image" puts a captioned PNG on the clipboard for pasting into Slack; "Download" saves the same file. "Love it" marks the result so future ideas learn from it. Every result lands in `generated/` as a PNG plus a JSON sidecar; the home page shows a strip of recent results.
 
 If the image model refuses a prompt, the app silently asks for a tamer concept once, then shows an error.
@@ -125,7 +125,7 @@ src/
     image.ts      gpt-image-1 call, content-policy detection
     mock.ts       mock concept and placeholder SVG
     store.ts      generated/ folder read, write, update, and the loved list
-    styles.ts     the five house styles
+    styles.ts     the eight house styles
     types.ts      record type and sample shoutouts
     ratelimit.ts  hourly image budget
     jobs.ts       in-memory background image jobs the browser polls
