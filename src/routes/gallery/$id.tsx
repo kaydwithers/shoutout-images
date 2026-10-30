@@ -12,7 +12,7 @@ export const Route = createFileRoute('/gallery/$id')({
     return record
   },
   notFoundComponent: () => (
-    <main className="mx-auto max-w-2xl px-4 py-14 sm:px-6">
+    <main className="mx-auto max-w-4xl px-4 py-14 sm:px-6">
       <p className="text-ink">That shoutout image doesn't exist.</p>
       <Link to="/" className={`mt-4 ${backLink}`}>
         ← Back to generator
@@ -27,7 +27,7 @@ function GalleryItem() {
   const created = new Date(record.createdAt)
 
   return (
-    <main className="mx-auto max-w-2xl space-y-6 px-4 py-10 sm:px-6 sm:py-14">
+    <main className="mx-auto max-w-4xl space-y-6 px-4 py-10 sm:px-6 sm:py-14">
       <Link to="/" className={backLink}>
         ← Back to generator
       </Link>

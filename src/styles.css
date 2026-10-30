@@ -5,50 +5,64 @@
 
 @theme {
   --font-sans: 'Satoshi', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Type scale bumped one notch for readability: xs 13px, sm 15px, base 17px, lg 19px. */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.25rem;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.5rem;
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.7rem;
+  --text-lg: 1.1875rem;
+  --text-lg--line-height: 1.8rem;
+  --text-3xl: 2rem;
+  --text-3xl--line-height: 2.4rem;
+  --text-4xl: 2.5rem;
+  --text-4xl--line-height: 2.9rem;
 }
 
 /*
- * Semantic tokens. Warm neutrals, one accent used sparingly (focus rings, links),
- * and a near-black primary action in light mode that flips to near-white in dark.
+ * Semantic tokens. Pure black and white, with light grey only for subtle panel
+ * fills. Borders and primary actions are full-contrast in both modes.
  */
 :root {
   color-scheme: light;
-  --page: #f7f6f3;
+  --page: #ffffff;
   --card: #ffffff;
   --field: #ffffff;
-  --well: #f1efea;
-  --line: #e4e1db;
-  --line-strong: #c9c5bd;
-  --ink: #1a1816;
-  --ink-muted: #5f5a52;
-  --ink-faint: #8b857b;
-  --primary: #1a1816;
-  --primary-hover: #33302b;
+  --well: #f2f2f2;
+  --line: #000000;
+  --line-strong: #000000;
+  --ink: #000000;
+  --ink-muted: #262626;
+  --ink-faint: #595959;
+  --primary: #000000;
+  --primary-hover: #333333;
   --primary-ink: #ffffff;
-  --accent: #b45309;
+  --accent: #000000;
   --accent-ink: #ffffff;
-  --danger: #b42318;
-  --danger-soft: #fdecea;
+  --danger: #000000;
+  --danger-soft: #f2f2f2;
 }
 
 .dark {
   color-scheme: dark;
-  --page: #121110;
-  --card: #1b1917;
-  --field: #161412;
-  --well: #22201d;
-  --line: #2d2a26;
-  --line-strong: #46423c;
-  --ink: #f3f1ec;
-  --ink-muted: #aaa49a;
-  --ink-faint: #7a746b;
-  --primary: #f3f1ec;
-  --primary-hover: #ffffff;
-  --primary-ink: #121110;
-  --accent: #f59e0b;
-  --accent-ink: #121110;
-  --danger: #f87171;
-  --danger-soft: #2a1715;
+  --page: #000000;
+  --card: #000000;
+  --field: #000000;
+  --well: #141414;
+  --line: #ffffff;
+  --line-strong: #ffffff;
+  --ink: #ffffff;
+  --ink-muted: #e6e6e6;
+  --ink-faint: #b3b3b3;
+  --primary: #ffffff;
+  --primary-hover: #d9d9d9;
+  --primary-ink: #000000;
+  --accent: #ffffff;
+  --accent-ink: #000000;
+  --danger: #ffffff;
+  --danger-soft: #141414;
 }
 
 @theme inline {
@@ -82,7 +96,7 @@ body,
 
 body {
   margin: 0;
-  font-feature-settings: 'ss01', 'cv01';
+  font-weight: 500; /* Satoshi's regular is light on screen; medium reads better. */
 }
 
 /* One consistent, visible focus style for keyboard users. */

@@ -15,7 +15,7 @@ Personal prototype. Runs locally, or on Render or Railway behind a password (see
 
 If the image model refuses a prompt, the app silently asks for a tamer concept once, then shows an error.
 
-The UI is a quiet, high-contrast design in warm neutrals with light and dark modes. The sun/moon button in the header toggles the mode; the choice is remembered in the browser and otherwise follows the OS setting.
+The UI is a plain black-and-white, high-contrast design with light and dark modes. The sun/moon button in the header toggles the mode; the choice is remembered in the browser and otherwise follows the OS setting.
 
 ## Setup
 
@@ -145,7 +145,7 @@ Stack: TanStack Start, TanStack Router, TanStack Query, React 19, Tailwind v4, T
 
 ## Tweaking the colours and font
 
-Light and dark palettes live in `src/styles.css` as CSS variables (`--page`, `--card`, `--ink`, `--primary`, `--accent`, and so on), exposed to Tailwind as `bg-page`, `text-ink`, `bg-primary`, etc. Primary actions are near-black in light mode and near-white in dark; the single accent is reserved for focus rings and the mock label. Dark mode is the `dark` class on `<html>`, toggled by `src/components/ThemeToggle.tsx`. The typeface is Satoshi, loaded from Fontshare in `src/routes/__root.tsx` and set as `--font-sans` in `src/styles.css`.
+Light and dark palettes live in `src/styles.css` as CSS variables (`--page`, `--card`, `--ink`, `--primary`, `--accent`, and so on), exposed to Tailwind as `bg-page`, `text-ink`, `bg-primary`, etc. Everything is black on white in light mode and white on black in dark mode, with a light grey only for subtle panel fills. The type scale is set one step larger than Tailwind's default in the same file. Dark mode is the `dark` class on `<html>`, toggled by `src/components/ThemeToggle.tsx`. The typeface is Satoshi, loaded from Fontshare in `src/routes/__root.tsx` and set as `--font-sans` in `src/styles.css`.
 
 ## Tweaking the humour
 

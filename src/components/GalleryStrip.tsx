@@ -19,7 +19,7 @@ export function GalleryStrip() {
   }
 
   return (
-    <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
+    <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
       {data.map((r) => (
         <li key={r.id}>
           <Link
