@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getStatus } from '#/server/shoutout'
 
@@ -7,6 +8,15 @@ export function statusQueryOptions() {
 
 export function MockBadge() {
   const { data } = useQuery(statusQueryOptions())
+
+  // The live configuration goes to the browser console rather than the page.
+  useEffect(() => {
+    if (!data || data.mock) return
+    console.info(
+      `[shoutout-images] Live: concepts via ${data.conceptProvider === 'anthropic' ? 'Claude' : 'OpenAI'}, images via ${data.imageModel} (${data.imageSize}, ${data.imageQuality}).`,
+    )
+  }, [data])
+
   if (!data) return null
   if (data.mock) {
     return (
@@ -19,6 +29,5 @@ export function MockBadge() {
       </div>
     )
   }
-  // Live mode shows nothing; the absence of the mock notice is the signal.
   return null
 }

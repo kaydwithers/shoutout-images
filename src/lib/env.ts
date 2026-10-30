@@ -57,3 +57,10 @@ export function mockReason(): string | null {
   if (!conceptKeyPresent) missing.push(conceptProvider === 'anthropic' ? 'ANTHROPIC_API_KEY' : 'OPENAI_API_KEY')
   return `Missing ${[...new Set(missing)].join(' and ')} in .env`
 }
+
+// One line at startup so the server log (and Render's log view) shows the active configuration.
+console.info(
+  env.mock
+    ? `[shoutout-images] MOCK mode: ${mockReason()}.`
+    : `[shoutout-images] Live: concepts via ${env.conceptProvider} (${env.conceptModel[env.conceptProvider]}), images via ${env.imageModel} (${env.imageSize}, ${env.imageQuality}).`,
+)
