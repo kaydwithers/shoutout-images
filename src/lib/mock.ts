@@ -11,7 +11,7 @@ const MOCK_GAGS = [
   'A {animal} superhero holding up a bridge made entirely of sticky notes',
 ]
 
-export async function mockConcept(opts: { shoutout: string; animal: string; angle?: string; avoid?: string[] }): Promise<Concept> {
+export async function mockConcept(opts: { shoutout: string; animal: string; angle?: string; twist?: string; avoid?: string[] }): Promise<Concept> {
   await sleep(600)
   const avoid = new Set(opts.avoid ?? [])
   const pool = MOCK_GAGS.map((g) => g.replace('{animal}', opts.animal)).filter((g) => !avoid.has(g))

@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 import { animalIn, randomAnimal } from '#/lib/animals'
-import { randomAngle } from '#/lib/comedy'
+import { randomAngle, randomTwist } from '#/lib/comedy'
 import { generateConcept } from '#/lib/concept'
 import { env, mockReason } from '#/lib/env'
 import { ContentPolicyError, renderImage } from '#/lib/image'
@@ -38,6 +38,7 @@ async function conceptFor(opts: {
   shoutout: string
   animal: string
   angle: string
+  twist: string
   avoid?: string[]
   tamer?: boolean
 }): Promise<Concept> {
@@ -65,7 +66,8 @@ export const createConcept = createServerFn({ method: 'POST' })
     // The animal is randomised in code and never repeats one already used for this shoutout.
     const animal = randomAnimal(data.avoid)
     const angle = randomAngle()
-    const concept = await conceptFor({ shoutout: data.shoutout, animal, angle, avoid: data.avoid })
+    const twist = randomTwist()
+    const concept = await conceptFor({ shoutout: data.shoutout, animal, angle, twist, avoid: data.avoid })
     return { ...concept, styleId: style.id }
   })
 
@@ -99,6 +101,7 @@ async function renderAndSave(id: string, data: z.infer<typeof ImageInput>): Prom
       shoutout: data.shoutout,
       animal: animalIn(data.concept) ?? randomAnimal(),
       angle: randomAngle(),
+      twist: randomTwist(),
       avoid: [data.concept],
       tamer: true,
     })
