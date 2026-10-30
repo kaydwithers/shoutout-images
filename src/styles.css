@@ -6,19 +6,11 @@
 @theme {
   --font-sans: 'Satoshi', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
-  /* Type scale bumped one notch for readability: xs 13px, sm 15px, base 17px, lg 19px. */
-  --text-xs: 0.8125rem;
-  --text-xs--line-height: 1.25rem;
-  --text-sm: 0.9375rem;
-  --text-sm--line-height: 1.5rem;
+  /* Exactly two text sizes: paragraphs use the base size, headings use 2xl. */
   --text-base: 1.0625rem;
   --text-base--line-height: 1.7rem;
-  --text-lg: 1.1875rem;
-  --text-lg--line-height: 1.8rem;
-  --text-3xl: 2rem;
-  --text-3xl--line-height: 2.4rem;
-  --text-4xl: 2.5rem;
-  --text-4xl--line-height: 2.9rem;
+  --text-2xl: 1.75rem;
+  --text-2xl--line-height: 2.25rem;
 }
 
 /*
@@ -96,6 +88,8 @@ body,
 
 body {
   margin: 0;
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
   font-weight: 500; /* Satoshi's regular is light on screen; medium reads better. */
 }
 

@@ -40,9 +40,9 @@ type StyleChoice = StyleId | 'random'
 type Phase = 'idle' | 'concept' | 'image' | 'done' | 'error'
 
 const primaryButton =
-  'inline-flex h-10 items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-ink transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50'
+  'inline-flex h-10 items-center justify-center rounded-lg bg-primary px-4 font-semibold text-primary-ink transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50'
 const secondaryButton =
-  'inline-flex h-10 items-center justify-center rounded-lg border border-line bg-card px-4 text-sm font-semibold text-ink transition-colors hover:border-line-strong hover:bg-well disabled:cursor-not-allowed disabled:opacity-50'
+  'inline-flex h-10 items-center justify-center rounded-lg border border-line bg-card px-4 font-semibold text-ink transition-colors hover:border-line-strong hover:bg-well disabled:cursor-not-allowed disabled:opacity-50'
 
 function Home() {
   const queryClient = useQueryClient()
@@ -121,8 +121,8 @@ function Home() {
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14">
       <div className="mb-8 space-y-3">
-        <h1 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl">Turn a shoutout into a picture.</h1>
-        <p className="max-w-prose text-base text-ink-muted">
+        <h1 className="text-2xl font-bold tracking-tight text-ink">Turn a shoutout into a picture.</h1>
+        <p className="max-w-prose text-ink-muted">
           Paste a workplace shoutout. We find the visual gag in it and paint it in one of three house styles.
         </p>
         <MockBadge />
@@ -130,7 +130,7 @@ function Home() {
 
       <form onSubmit={onSubmit} className="rounded-xl border border-line bg-card p-4 sm:p-5">
         <label className="block">
-          <span className="mb-1.5 block text-sm font-medium text-ink">Shoutout</span>
+          <span className="mb-1.5 block font-medium text-ink">Shoutout</span>
           <textarea
             value={shoutout}
             onChange={(e) => setShoutout(e.target.value)}
@@ -138,18 +138,18 @@ function Home() {
             maxLength={600}
             disabled={busy}
             placeholder="Shoutout to Sam for bringing homemade sourdough to every single standup this month."
-            className="w-full resize-y rounded-lg border border-line bg-field px-3.5 py-3 text-base leading-relaxed text-ink placeholder:text-ink-faint transition-colors hover:border-line-strong focus:border-line-strong focus:outline-none disabled:opacity-60"
+            className="w-full resize-y rounded-lg border border-line bg-field px-3.5 py-3 leading-relaxed text-ink placeholder:text-ink-faint transition-colors hover:border-line-strong focus:border-line-strong focus:outline-none disabled:opacity-60"
           />
         </label>
 
         <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
           <label className="block">
-            <span className="mb-1.5 block text-sm font-medium text-ink">Style</span>
+            <span className="mb-1.5 block font-medium text-ink">Style</span>
             <select
               value={styleChoice}
               onChange={(e) => setStyleChoice(e.target.value as StyleChoice)}
               disabled={busy}
-              className="h-10 rounded-lg border border-line bg-field px-3 pr-8 text-sm text-ink transition-colors hover:border-line-strong focus:border-line-strong focus:outline-none disabled:opacity-60"
+              className="h-10 rounded-lg border border-line bg-field px-3 pr-8 text-ink transition-colors hover:border-line-strong focus:border-line-strong focus:outline-none disabled:opacity-60"
             >
               <option value="random">Random</option>
               {STYLES.map((s) => (
@@ -181,7 +181,7 @@ function Home() {
         {concept && phase !== 'concept' && (
           <Panel className="flex flex-wrap items-center gap-3">
             <StyleBadge styleId={concept.styleId} />
-            <p className="text-sm text-ink">
+            <p className="text-ink">
               <span className="font-medium text-ink-muted">Concept</span> {concept.concept}
             </p>
           </Panel>
@@ -194,7 +194,7 @@ function Home() {
         )}
 
         {phase === 'error' && error && (
-          <div role="alert" className="rounded-xl border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-ink">
+          <div role="alert" className="rounded-xl border border-danger/30 bg-danger-soft px-4 py-3 text-ink">
             <p className="font-semibold text-danger">Couldn't generate that one.</p>
             <p className="mt-1">{error}</p>
           </div>
@@ -212,7 +212,7 @@ function Home() {
       </section>
 
       <section className="mt-14">
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-ink-muted">Recent</h2>
+        <h2 className="mb-3 text-2xl font-bold tracking-tight text-ink">Recent</h2>
         <GalleryStrip />
       </section>
     </main>
@@ -225,7 +225,7 @@ function Panel({ children, className = '' }: { children: React.ReactNode; classN
 
 function StatusLine({ children, spinner }: { children: React.ReactNode; spinner?: boolean }) {
   return (
-    <p className="flex items-center gap-2.5 text-sm text-ink-muted">
+    <p className="flex items-center gap-2.5 text-ink-muted">
       {spinner && (
         <span
           className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-line-strong border-t-ink"

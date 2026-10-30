@@ -5,7 +5,7 @@ export function Tag({ children, title }: { children: React.ReactNode; title?: st
   return (
     <span
       title={title}
-      className="inline-flex items-center rounded-md border border-line bg-card/95 px-2 py-0.5 text-xs font-medium text-ink"
+      className="inline-flex items-center rounded-md border border-line bg-card/95 px-2 py-0.5 font-medium text-ink"
     >
       {children}
     </span>

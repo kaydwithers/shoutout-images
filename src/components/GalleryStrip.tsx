@@ -9,10 +9,10 @@ export function galleryQueryOptions() {
 export function GalleryStrip() {
   const { data, isPending } = useQuery(galleryQueryOptions())
 
-  if (isPending) return <p className="text-sm text-ink-muted">Loading recent shoutouts…</p>
+  if (isPending) return <p className="text-ink-muted">Loading recent shoutouts…</p>
   if (!data || data.length === 0) {
     return (
-      <p className="rounded-xl border border-dashed border-line-strong px-4 py-8 text-center text-sm text-ink-muted">
+      <p className="rounded-xl border border-dashed border-line-strong px-4 py-8 text-center text-ink-muted">
         Nothing generated yet. Your results will appear here.
       </p>
     )

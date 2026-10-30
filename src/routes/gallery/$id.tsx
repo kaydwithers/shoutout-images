@@ -3,7 +3,7 @@ import { ResultCard } from '#/components/ResultCard'
 import { getGalleryItem } from '#/server/shoutout'
 
 const backLink =
-  'inline-flex items-center gap-1.5 rounded-sm text-sm font-medium text-ink-muted transition-colors hover:text-ink'
+  'inline-flex items-center gap-1.5 rounded-sm font-medium text-ink-muted transition-colors hover:text-ink'
 
 export const Route = createFileRoute('/gallery/$id')({
   loader: async ({ params }) => {
@@ -34,14 +34,14 @@ function GalleryItem() {
 
       <ResultCard record={record} showDetailLink={false} />
 
-      <dl className="divide-y divide-line rounded-xl border border-line bg-card text-sm">
+      <dl className="divide-y divide-line rounded-xl border border-line bg-card">
         <Row label="Generated">{created.toLocaleString()}</Row>
         <Row label="Provider">{record.provider}</Row>
         <Row label="Image prompt">
           <p className="whitespace-pre-wrap leading-relaxed">{record.imagePrompt}</p>
         </Row>
         <Row label="Final prompt sent">
-          <pre className="whitespace-pre-wrap rounded-lg bg-well p-3 font-mono text-xs leading-relaxed text-ink-muted">{record.finalPrompt}</pre>
+          <pre className="whitespace-pre-wrap rounded-lg bg-well p-3 font-mono leading-relaxed text-ink-muted">{record.finalPrompt}</pre>
         </Row>
       </dl>
     </main>
