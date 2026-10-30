@@ -5,12 +5,15 @@ export interface ArtStyle {
   label: string
   /** Appended to every image prompt so the look stays consistent within a style. */
   prompt: string
+  /** Optional Tailwind classes that colour this style's tag. Default is black and white. */
+  tagClass?: string
 }
 
 export const STYLES: ArtStyle[] = [
   {
     id: 'clay',
     label: 'Clay figurine',
+    tagClass: 'bg-clay text-black',
     prompt:
       'Adorable chunky 3D clay figurine, rounded squishy proportions, oversized head, tiny dot eyes and a small happy smile, handmade plasticine texture, soft even studio lighting. The background is one single flat solid pastel colour, completely plain, no gradient, no floor line, no scenery, no props beyond what the gag needs.',
   },

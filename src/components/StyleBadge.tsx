@@ -1,11 +1,11 @@
 import { getStyle, type StyleId } from '#/lib/styles'
 
-/** Small neutral label used over images and in panels. */
-export function Tag({ children, title }: { children: React.ReactNode; title?: string }) {
+/** Small label used over images and in panels. Black and white unless given a colour. */
+export function Tag({ children, title, className = '' }: { children: React.ReactNode; title?: string; className?: string }) {
   return (
     <span
       title={title}
-      className="inline-flex items-center rounded-md border border-line bg-card/95 px-2 py-0.5 font-medium text-ink"
+      className={`inline-flex items-center rounded-md border border-line px-2 py-0.5 font-medium ${className || 'bg-card/95 text-ink'}`}
     >
       {children}
     </span>
@@ -13,5 +13,6 @@ export function Tag({ children, title }: { children: React.ReactNode; title?: st
 }
 
 export function StyleBadge({ styleId }: { styleId: StyleId }) {
-  return <Tag>{getStyle(styleId).label}</Tag>
+  const style = getStyle(styleId)
+  return <Tag className={style.tagClass}>{style.label}</Tag>
 }

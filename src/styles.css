@@ -4,6 +4,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  /* Bright tag colour for the Clay figurine style. Same in both modes. */
+  --color-clay: #ff5fbf;
+
   --font-sans: 'Satoshi', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
   /* Exactly two text sizes: paragraphs use the base size, headings use 2xl. */
