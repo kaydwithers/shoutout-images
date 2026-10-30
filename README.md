@@ -119,6 +119,7 @@ src/
     env.ts        reads .env, decides provider, mock mode, and deployment settings
     prompt.ts     the concept system prompt and final image prompt builder
     animals.ts    the random animal that plays the person
+    comedy.ts     the random comedic angle each gag is built around
     concept.ts    concept step (Anthropic or OpenAI, structured output)
     image.ts      gpt-image-1 call, content-policy detection
     mock.ts       mock concept and placeholder SVG
@@ -150,4 +151,4 @@ Light and dark palettes live in `src/styles.css` as CSS variables (`--page`, `--
 
 ## Tweaking the humour
 
-The whole personality lives in `src/lib/prompt.ts` (what makes a good gag) and `src/lib/styles.ts` (how each house style looks). Edit the system prompt, then compare results across a few shoutouts via the gallery detail pages, which show the exact prompt that produced each image.
+The whole personality lives in `src/lib/prompt.ts` (what makes a good gag), `src/lib/comedy.ts` (the comedic angles picked at random), `src/lib/animals.ts` (the cast) and `src/lib/styles.ts` (how each house style looks). Edit the system prompt, then compare results across a few shoutouts via the gallery detail pages, which show the exact prompt that produced each image.

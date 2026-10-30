@@ -16,6 +16,8 @@ export interface ConceptOptions {
   shoutout: string
   /** The cute animal that plays the person. Picked at random by the caller. */
   animal: string
+  /** The comedic angle to build the gag around. Picked at random by the caller. */
+  angle: string
   avoid?: string[]
   tamer?: boolean
 }

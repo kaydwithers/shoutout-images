@@ -6,14 +6,22 @@ Your job: find or invent the ONE funniest visual in the shoutout and describe it
 
 Rules:
 - Never include the person's name, and never describe a specific real person. The person is always played by the cute animal named in the request. Use exactly that animal and no other character.
-- Prefer the concrete, physical, visual element of the shoutout. If the shoutout is abstract (patience, kindness, answering questions fast), invent a visual metaphor and exaggerate it: a serene figure meditating while buried under 400 glowing notification bubbles; a tiny superhero holding up a collapsing bridge made of sticky notes.
-- Exaggerate for comedy. Bigger, sillier, more dramatic. One clear gag, not a collage.
+- Build the gag around the comedic angle given in the request. Commit to it fully.
+- Be specific. Pull one concrete noun or verb straight out of the shoutout (the report, the sourdough, the spreadsheet, the costume, the late-night fix) and make that object the centre of the joke. Generic office props are a last resort.
+- Make it physical. The funniest version is something you could photograph: hauling, balancing, squeezing, launching, dunking, juggling, wearing, riding. Turn abstract praise into a physical action with the object.
+- Exaggerate hard. Bigger, sillier, more dramatic. One clear gag, not a collage.
+- Surprise me. Reject your first idea and pick a stranger one. Never reuse a gag shape from a previous concept listed in the request, and do not reuse the examples below.
 - Make it cute. The animal should be endearing and huggable: rounded, small, cheerful, a little clumsy. Comedy comes from the situation and the props, never from anything harsh.
-- Abstract or technical work still needs a physical gag. "Got a tricky report working" could be the animal triumphantly holding up an enormous tangled ball of yarn that it has just untangled into a neat bow, or wearing oversized glasses while balancing a teetering tower of folders.
 - The image will have a plain single-colour background, so do not describe a setting, room, landscape, floor, or sky. Describe the character, its pose and expression, and the one or two props that carry the gag. Everything important must be on the character or in its hands.
 - No text, letters, words, logos, signs, or speech bubbles anywhere in the image.
 - Keep it warm and celebratory. Never mock the person. The joke is affectionate.
 - Do not mention art style, rendering technique, or medium. That is added separately.
+
+Examples of the energy wanted (do not copy these):
+- A duck in a tiny hard hat riding a runaway shopping trolley piled with filing cabinets, grinning.
+- A capybara calmly sipping tea inside a bathtub overflowing with rubber-duck-shaped bug reports.
+- An axolotl in oversized wizard sleeves pulling a single perfect spreadsheet from a top hat the size of a car.
+- A hedgehog curled into a ball being used as the pin in a game of bowling against a row of coffee mugs.
 
 Output two fields:
 - concept: one short sentence (max 15 words) describing the gag, written for a human to read. Name the animal.
@@ -22,10 +30,15 @@ Output two fields:
 export function conceptUserPrompt(opts: {
   shoutout: string
   animal: string
+  angle: string
   avoid?: string[]
   tamer?: boolean
 }): string {
-  const parts = [`Shoutout:\n"""${opts.shoutout.trim()}"""`, `The character is a ${opts.animal}.`]
+  const parts = [
+    `Shoutout:\n"""${opts.shoutout.trim()}"""`,
+    `The character is a ${opts.animal}.`,
+    `Comedic angle for this one: ${opts.angle}`,
+  ]
   if (opts.avoid && opts.avoid.length > 0) {
     parts.push(
       `Already used these concepts, so pick a clearly different angle or gag:\n${opts.avoid.map((a) => `- ${a}`).join('\n')}`,
