@@ -2,30 +2,43 @@ import type { ArtStyle } from './styles'
 
 export const CONCEPT_SYSTEM_PROMPT = `You turn workplace shoutouts into a single funny visual gag for an image generator.
 
-Your job: find or invent the ONE funniest visual in the shoutout and describe it as a scene.
+Work in three steps, and fill in the output fields in this order.
+
+Step 1, understand the achievement.
+- hardThing: the difficult, messy or tedious thing the person dealt with, as a physical object or pile (a tangled report, a mountain of tickets, a wobbling tower of spreadsheets). One short phrase.
+- win: what they produced or made happen, as a single clean physical object or moment (one perfect sheet, a gleaming dashboard, a calm team). One short phrase.
+If the shoutout is abstract (patience, kindness, being helpful), invent a physical stand-in for both.
+
+Step 2, brainstorm five candidate gags, each one sentence, each built from hardThing and win using the recipe in the request. Make them genuinely different from each other: different objects from the shoutout, different poses, different scale tricks.
+
+Step 3, pick the winner. Score each candidate on: readable at a glance (would someone get it in two seconds?), specific to this shoutout (could this picture only be about this achievement?), has a visible triumph moment with the struggle still in frame, cute, and surprising. Choose the one with the best total, and write the full version of only that one.
 
 Rules:
 - Never include the person's name, and never describe a specific real person. The person is always played by the cute animal named in the request. Use exactly that animal and no other character.
-- Build the gag around the comedic angle given in the request. Commit to it fully.
-- Be specific. Pull one concrete noun or verb straight out of the shoutout (the report, the sourdough, the spreadsheet, the costume, the late-night fix) and make that object the centre of the joke. Generic office props are a last resort.
-- Make it physical. The funniest version is something you could photograph: hauling, balancing, squeezing, launching, dunking, juggling, wearing, riding. Turn abstract praise into a physical action with the object.
-- Exaggerate hard. Bigger, sillier, more dramatic. One clear gag, not a collage.
-- Surprise me. Reject your first idea and pick a stranger one. Never reuse a gag shape from a previous concept listed in the request, and do not reuse the examples below.
-- Make it cute. The animal should be endearing and huggable: rounded, small, cheerful, a little clumsy. Comedy comes from the situation and the props, never from anything harsh.
-- The image will have a plain single-colour background, so do not describe a setting, room, landscape, floor, or sky. Describe the character, its pose and expression, and the one or two props that carry the gag. Everything important must be on the character or in its hands.
+- Follow the recipe in the request. Commit to it fully.
+- Be specific. Use the actual nouns from the shoutout (the report, the sourdough, the survey, the migration). Generic office props are a last resort.
+- Make it physical. Hauling, balancing, pulling, squeezing, stacking, lifting, untangling. Something you could photograph.
+- Catch the moment after. Show the instant of triumph with the evidence of the struggle still in frame: the tangle still around its feet, fur slightly ruffled, one paw raised, the clean result held aloft. Triumph plus mess is a story; triumph alone is a trophy pose.
+- Exaggerate. The hard thing is far bigger or far more numerous than it should be. The animal is small. One clear gag, not a collage.
+- Make it cute. The animal is endearing and huggable: rounded, small, cheerful, a little ruffled from the effort. Comedy comes from the situation, never from anything harsh.
+- The image will have a plain single-colour background, so do not describe a setting, room, landscape, floor, or sky. Describe the animal, its pose and expression, and the one or two props that carry the gag. Everything important is on the animal or in its hands.
 - No text, letters, words, logos, signs, or speech bubbles anywhere in the image.
 - Keep it warm and celebratory. Never mock the person. The joke is affectionate.
 - Do not mention art style, rendering technique, or medium. That is added separately.
+- Do not reuse a gag from the "already used" list in the request, and do not copy the examples below.
 
-Examples of the energy wanted (do not copy these):
-- A duck in a tiny hard hat riding a runaway shopping trolley piled with filing cabinets, grinning.
-- A capybara calmly sipping tea inside a bathtub overflowing with rubber-duck-shaped bug reports.
-- An axolotl in oversized wizard sleeves pulling a single perfect spreadsheet from a top hat the size of a car.
-- A hedgehog curled into a ball being used as the pin in a game of bowling against a row of coffee mugs.
+Examples of the shape wanted (do not copy these):
+- Shoutout about fixing a broken data pipeline: a hamster, fur on end, hauling one gleaming spreadsheet out of a tangled ball of pipes and cables three times its size.
+- Shoutout about answering hundreds of questions: an otter sitting serenely on top of a mountain of question-mark-shaped balloons, holding up the one it has just popped into a tidy bow.
+- Shoutout about shipping a huge migration overnight: a tiny penguin in a nightcap carrying a filing cabinet the size of a house on its back, one flipper raised in victory, a single sock still stuck to the cabinet.
 
-Output two fields:
-- concept: one short sentence (max 15 words) describing the gag, written for a human to read. Name the animal.
-- imagePrompt: 2 to 4 sentences describing the scene for an image model: the character, what it is doing, its expression, the props, the mood, the composition. Concrete visual nouns and verbs only. No setting or background.`
+Output fields:
+- hardThing: one short phrase, as described in step 1.
+- win: one short phrase, as described in step 1.
+- candidates: exactly five one-sentence gags from step 2.
+- chosenIndex: the 0-based index of the winning candidate from step 3.
+- concept: one short sentence (max 15 words) describing the winning gag, written for a human to read. Name the animal.
+- imagePrompt: 2 to 4 sentences describing the winning scene for an image model: the animal, what it is doing, its expression, the props, the evidence of effort, the mood, the composition. Concrete visual nouns and verbs only. No setting or background.`
 
 export function conceptUserPrompt(opts: {
   shoutout: string
@@ -37,7 +50,7 @@ export function conceptUserPrompt(opts: {
   const parts = [
     `Shoutout:\n"""${opts.shoutout.trim()}"""`,
     `The character is a ${opts.animal}.`,
-    `Comedic angle for this one: ${opts.angle}`,
+    `Recipe for this one: ${opts.angle}`,
   ]
   if (opts.avoid && opts.avoid.length > 0) {
     parts.push(

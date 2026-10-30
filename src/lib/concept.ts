@@ -7,10 +7,30 @@ import { env } from './env'
 import { CONCEPT_SYSTEM_PROMPT, conceptUserPrompt } from './prompt'
 import type { Concept } from './types'
 
+/**
+ * Field order matters: the model fills these top to bottom, so it has to name the
+ * struggle and the win, brainstorm, and choose before it writes the final gag.
+ */
 const ConceptSchema = z.object({
+  hardThing: z.string(),
+  win: z.string(),
+  candidates: z.array(z.string()),
+  chosenIndex: z.number().int(),
   concept: z.string(),
   imagePrompt: z.string(),
 })
+
+type ConceptDraft = z.infer<typeof ConceptSchema>
+
+/** Keeps only what the rest of the app stores; the working-out stays in the model's head. */
+function finalConcept(draft: ConceptDraft): Concept {
+  // Logged so the server output shows the alternatives when tuning the prompt.
+  console.info(
+    `[concept] hard: ${draft.hardThing} | win: ${draft.win}\n` +
+      draft.candidates.map((c, i) => `  ${i === draft.chosenIndex ? '>' : ' '} ${i}. ${c}`).join('\n'),
+  )
+  return { concept: draft.concept, imagePrompt: draft.imagePrompt }
+}
 
 export interface ConceptOptions {
   shoutout: string
@@ -38,10 +58,10 @@ function openaiClient() {
 async function conceptViaAnthropic(opts: ConceptOptions): Promise<Concept> {
   const response = await anthropicClient().messages.parse({
     model: env.conceptModel.anthropic,
-    max_tokens: 2000,
+    max_tokens: 3000,
     system: CONCEPT_SYSTEM_PROMPT,
     messages: [{ role: 'user', content: conceptUserPrompt(opts) }],
-    output_config: { effort: 'low', format: zodOutputFormat(ConceptSchema) },
+    output_config: { effort: 'medium', format: zodOutputFormat(ConceptSchema) },
   })
   if (response.stop_reason === 'refusal') {
     throw new Error('The concept model declined this shoutout.')
@@ -49,7 +69,7 @@ async function conceptViaAnthropic(opts: ConceptOptions): Promise<Concept> {
   if (!response.parsed_output) {
     throw new Error('The concept model returned an unparseable response.')
   }
-  return response.parsed_output
+  return finalConcept(response.parsed_output)
 }
 
 async function conceptViaOpenAI(opts: ConceptOptions): Promise<Concept> {
@@ -65,7 +85,7 @@ async function conceptViaOpenAI(opts: ConceptOptions): Promise<Concept> {
   if (!parsed) {
     throw new Error('The concept model returned an unparseable response.')
   }
-  return parsed
+  return finalConcept(parsed)
 }
 
 export async function generateConcept(opts: ConceptOptions): Promise<Concept> {
