@@ -68,7 +68,7 @@ All in `.env`. See `.env.example` for the full list.
 | `ANTHROPIC_MODEL` | `claude-haiku-5-5` | |
 | `OPENAI_TEXT_MODEL` | `gpt-5-mini` | Used when the concept provider is OpenAI. |
 | `OPENAI_IMAGE_MODEL` | `gpt-image-2.5-flare` | Also `gpt-image-2.5-sunburst`, `gpt-image-2`. |
-| `APP_PASSWORD` | off | When set, the whole site asks for this password via HTTP Basic auth. Any username. |
+| `APP_PASSWORD` | off | When set, visitors see a sign-in page and get a 30-day cookie. Scripts can send HTTP Basic auth instead (any username). `/logout` ends the session. Changing the password signs everyone out. |
 | `GENERATED_DIR` | `./generated` | Where images are saved. Point at a persistent volume in production. |
 | `IMAGE_HOURLY_LIMIT` | `30` | Max real images per rolling hour across all users. Mock images don't count. |
 
@@ -79,12 +79,12 @@ All in `.env`. See `.env.example` for the full list.
 1. **Set an OpenAI spend limit first.** platform.openai.com → Settings → Limits.
 2. Sign in at render.com with GitHub → New → **Blueprint** → pick `shoutout-images` → Apply. Render builds with `npm ci && npm run build` on Node 24 and starts with `npm start`.
 3. When prompted for `OPENAI_API_KEY` and `ANTHROPIC_API_KEY`, paste them, or leave both blank to deploy in mock mode.
-4. `APP_PASSWORD` is generated for you. Copy it from the service's Environment tab. Any username plus that password gets you in.
+4. `APP_PASSWORD` is generated for you. Copy it from the service's Environment tab and enter it on the sign-in page. Each browser stays signed in for 30 days.
 5. Open the service URL. The first request after 15 idle minutes takes up to a minute while the free instance wakes.
 
 Free-tier caveat: no persistent disk, so the gallery resets whenever the service spins down or redeploys. For a permanent gallery, move to Railway with a volume (below) or swap `src/lib/store.ts` for object storage such as Cloudflare R2.
 
-`/healthz` is exempt from the password gate so Render's health check passes.
+`/healthz` is exempt from the password gate so Render's health check passes. `/login` and `/logout` are the gate's own pages.
 
 ## Deploying to Railway
 
@@ -106,7 +106,7 @@ The app builds to a plain Node server via the Nitro adapter (`npm run build`, th
    ```
 
    `PORT` is injected by Railway and picked up automatically.
-5. **Expose it.** Service → Settings → Networking → Generate Domain. Open the URL, enter any username and your `APP_PASSWORD` when the browser prompts.
+5. **Expose it.** Service → Settings → Networking → Generate Domain. Open the URL and enter your `APP_PASSWORD` on the sign-in page.
 6. **Redeploys** happen on every push to `main`.
 
 Everything on the volume survives redeploys. Without a volume, images disappear on each deploy.
@@ -129,7 +129,7 @@ src/
     ratelimit.ts  hourly image budget
     jobs.ts       in-memory background image jobs the browser polls
     download.ts   client-side canvas composite for "Download with caption"
-  start.ts        global request middleware (HTTP Basic auth password gate)
+  start.ts        global request middleware (password gate: sign-in page, 30-day cookie, Basic auth for scripts)
   server/
     shoutout.ts   TanStack Start server functions (createConcept, startImage, getImageJob, gallery)
   routes/
