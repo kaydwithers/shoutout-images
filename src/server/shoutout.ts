@@ -5,6 +5,7 @@ import { env, mockReason } from '#/lib/env'
 import { ContentPolicyError, renderImage } from '#/lib/image'
 import { mockConcept, mockImage } from '#/lib/mock'
 import { finalImagePrompt } from '#/lib/prompt'
+import { consumeImageBudget } from '#/lib/ratelimit'
 import { getStyle, randomStyle, STYLE_IDS, type StyleId } from '#/lib/styles'
 import { getRecord, listRecords, newId, saveRecord } from '#/lib/store'
 import type { Concept, ShoutoutRecord } from '#/lib/types'
@@ -73,6 +74,7 @@ export const createImage = createServerFn({ method: 'POST' })
 
     const render = async (c: Concept) => {
       const prompt = finalImagePrompt(c.imagePrompt, style)
+      if (!env.mock) consumeImageBudget()
       const image = env.mock ? await mockImage(c.concept, style) : await renderImage(prompt)
       return { prompt, image }
     }

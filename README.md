@@ -5,7 +5,7 @@ Paste a workplace shoutout, get a ridiculous picture of it.
 > "Shoutout to John for dressing up as a robot at our recent conference and doing funny dances."
 > becomes a clay figurine of a robot doing the worm under disco lights.
 
-Personal prototype. Runs on localhost only.
+Personal prototype. Runs locally, or on Railway behind a password (see Deploying).
 
 ## How it works
 
@@ -64,13 +64,41 @@ All in `.env`. See `.env.example` for the full list.
 | `ANTHROPIC_MODEL` | `claude-haiku-5-5` | |
 | `OPENAI_TEXT_MODEL` | `gpt-5-mini` | Used when the concept provider is OpenAI. |
 | `OPENAI_IMAGE_MODEL` | `gpt-image-1` | |
+| `APP_PASSWORD` | off | When set, the whole site asks for this password via HTTP Basic auth. Any username. |
+| `GENERATED_DIR` | `./generated` | Where images are saved. Point at a persistent volume in production. |
+| `IMAGE_HOURLY_LIMIT` | `30` | Max real images per rolling hour across all users. Mock images don't count. |
+
+## Deploying to Railway
+
+The app builds to a plain Node server via the Nitro adapter (`npm run build`, then `npm start`), which is what Railway expects. Images need a persistent volume, and the public URL needs a password so strangers can't spend your OpenAI balance.
+
+**Pricing note.** Railway's trial gives a one-time $5 credit for 30 days. After that the Free plan has about $1 of monthly credit, which is not enough to keep a service always on, and Hobby is $5 a month with $5 of usage included. Check railway.com/pricing before relying on the free tier.
+
+1. **Set an OpenAI spend limit first.** platform.openai.com → Settings → Limits. A hard monthly cap is the real safety net.
+2. **Create the project.** railway.com → New Project → Deploy from GitHub repo → pick `shoutout-images`. Railway detects Node, runs `npm run build`, and starts with `npm start`. Node 22 or newer is required (`engines` in package.json says so).
+3. **Add a volume.** On the service → Volumes → Add Volume, mount path `/data`.
+4. **Set variables.** Service → Variables:
+
+   ```
+   OPENAI_API_KEY=sk-...
+   ANTHROPIC_API_KEY=sk-ant-...
+   APP_PASSWORD=<a long random password>
+   GENERATED_DIR=/data
+   IMAGE_HOURLY_LIMIT=30
+   ```
+
+   `PORT` is injected by Railway and picked up automatically.
+5. **Expose it.** Service → Settings → Networking → Generate Domain. Open the URL, enter any username and your `APP_PASSWORD` when the browser prompts.
+6. **Redeploys** happen on every push to `main`.
+
+Everything on the volume survives redeploys. Without a volume, images disappear on each deploy.
 
 ## Project layout
 
 ```
 src/
   lib/
-    env.ts        reads .env, decides provider and mock mode
+    env.ts        reads .env, decides provider, mock mode, and deployment settings
     prompt.ts     the concept system prompt and final image prompt builder
     concept.ts    concept step (Anthropic or OpenAI, structured output)
     image.ts      gpt-image-1 call, content-policy detection
@@ -78,7 +106,9 @@ src/
     store.ts      generated/ folder read and write
     styles.ts     the three house styles
     types.ts      record type and sample shoutouts
+    ratelimit.ts  hourly image budget
     download.ts   client-side canvas composite for "Download with caption"
+  start.ts        global request middleware (HTTP Basic auth password gate)
   server/
     shoutout.ts   TanStack Start server functions (createConcept, createImage, gallery)
   routes/

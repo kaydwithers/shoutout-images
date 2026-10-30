@@ -39,7 +39,13 @@ export const env = {
   imageModel: process.env.OPENAI_IMAGE_MODEL?.trim() || 'gpt-image-1',
   imageSize: (process.env.IMAGE_SIZE?.trim() || '1024x1024') as '1024x1024' | '1536x1024' | '1024x1536',
   imageQuality: (process.env.IMAGE_QUALITY?.trim() || 'medium') as 'low' | 'medium' | 'high',
-  generatedDir: path.resolve(process.cwd(), 'generated'),
+  generatedDir: process.env.GENERATED_DIR?.trim()
+    ? path.resolve(process.env.GENERATED_DIR.trim())
+    : path.resolve(process.cwd(), 'generated'),
+  /** When set, every request must carry HTTP Basic auth with this password. */
+  appPassword: process.env.APP_PASSWORD?.trim() || undefined,
+  /** Maximum images generated per rolling hour across all users. Protects the API balance. */
+  imageHourlyLimit: Number(process.env.IMAGE_HOURLY_LIMIT) > 0 ? Number(process.env.IMAGE_HOURLY_LIMIT) : 30,
 } as const
 
 /** Why we're in mock mode, for the status badge. */
