@@ -39,7 +39,7 @@ export const Route = createFileRoute('/')({
 type StyleChoice = StyleId | 'random'
 type Phase = 'idle' | 'concept' | 'image' | 'done' | 'error'
 
-const generateButton =
+const primaryButton =
   'inline-flex h-10 items-center justify-center rounded-lg border border-line bg-brand px-5 font-bold text-brand-ink hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50'
 const secondaryButton =
   'inline-flex h-10 items-center justify-center rounded-lg border border-line bg-card px-4 font-semibold text-ink hover:border-line-strong hover:bg-well disabled:cursor-not-allowed disabled:opacity-50'
@@ -164,7 +164,7 @@ function Home() {
             <button type="button" onClick={onSurprise} disabled={busy} className={secondaryButton}>
               Surprise me
             </button>
-            <button type="submit" disabled={busy || shoutout.trim().length < 8} className={generateButton}>
+            <button type="submit" disabled={busy || shoutout.trim().length < 8} className={primaryButton}>
               {busy ? 'Generating…' : 'Generate'}
             </button>
           </div>
