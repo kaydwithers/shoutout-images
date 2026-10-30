@@ -1,17 +1,18 @@
 /**
- * Gag recipes, one picked at random per run. Every recipe is a way of dramatising
- * the achievement in the shoutout, so the joke is always about what the person did.
+ * Scene types, one picked at random per run. Each is a different way to compose the
+ * picture, and every one is anchored in the specific details of the shoutout so the
+ * gag is recognisably about what the person did, where, and with what.
  */
 export const COMEDY_ANGLES = [
-  'The mess and the prize: the hard thing is a huge physical tangle, pile or knot, and the animal has just pulled the one clean, perfect result out of it and holds it up.',
-  'The impossible feat made literal: the animal is physically doing the hard thing as if it were a feat of strength or balance, far beyond its size, and succeeding.',
-  'Sheer volume: the animal is surrounded by, or half buried in, a ridiculous quantity of the thing, and is holding up the single one that mattered.',
-  'Tiny hero, giant problem: the hard thing is enormous and the animal is tiny, standing on top of it or beside it, clearly the one who beat it.',
-  'The absurd shortcut: the animal did the hard thing with a comically wrong everyday tool, and it worked perfectly. Show the tool and the perfect result together.',
-  'Before and after in one frame: half the scene is the chaotic version of the thing, the other half is the fixed, gleaming version, and the animal stands between them taking a small bow.',
+  'The win, on location: show the moment the achievement paid off, in its real setting, built from the actual details in the shoutout (the dinner table, the stage, the codebase as a physical thing). The animal is in the middle of it, delighted.',
+  'Disaster averted: show, in miniature off to one side, the embarrassing thing that would have happened, while the animal stands proudly in the version that actually happened. Both halves use details from the shoutout.',
+  'The ridiculous tool: the animal got it done with one absurd everyday object as its instrument, and the result is perfect. The tool and the result are both drawn from the shoutout.',
+  'The celebration feast: the achievement is being celebrated with food, confetti or a tiny party, and every prop is a detail from the shoutout turned into a decoration or dish.',
+  'The heroic journey: the animal is mid-expedition to make it happen, carrying or dragging the key object from the shoutout across or up something comically large, nearly there.',
+  'The hero portrait: the animal poses triumphantly wearing or holding the two or three most specific objects from the shoutout like trophies, with one small sign of effort still showing.',
 ] as const
 
-/** Random recipe, avoiding any that appear verbatim in the given texts. */
+/** Random scene type, avoiding any that appear verbatim in the given texts. */
 export function randomAngle(avoidTexts: string[] = []): string {
   const used = avoidTexts.join('\n')
   const pool = COMEDY_ANGLES.filter((a) => !used.includes(a))

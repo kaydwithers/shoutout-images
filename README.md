@@ -9,7 +9,7 @@ Personal prototype. Runs locally, or on Render or Railway behind a password (see
 
 ## How it works
 
-1. **Concept step.** Claude Haiku 5.5 (or an OpenAI text model as fallback) names the hard thing and the win in the shoutout, brainstorms five gags built on a randomly chosen recipe, scores them, and writes up the winner as an image prompt. The person is abstracted away: never named, never depicted. A cute animal chosen at random in code stands in for them, and "Try another take" picks a different one. Abstract shoutouts ("for being so patient") get an invented visual metaphor.
+1. **Concept step.** Claude Haiku 5.5 (or an OpenAI text model as fallback) lists the concrete details in the shoutout (the dinner, the city, the day), brainstorms five gags on a randomly chosen scene type that each use at least two of them, scores them, and writes up the winner as an image prompt. The person is abstracted away: never named, never depicted. A cute animal chosen at random in code stands in for them, and "Try another take" picks a different one. Abstract shoutouts ("for being so patient") get an invented visual metaphor.
 2. **Image step.** OpenAI's `gpt-image-2.5-flare` renders the prompt in one of four cute house styles, clay figurine, flat vector sticker, cute cartoon, or crocheted amigurumi, always on a single flat solid-colour background. Random by default, or pick one. No text is ever requested in the image. Rendering runs as a background job that the page polls every two seconds, so a slow render never trips a hosting proxy's request timeout.
 3. **Save.** Every result lands in `generated/` as a PNG plus a JSON sidecar with the shoutout, concept, style, and the exact prompt sent. The home page shows a strip of recent results; click one for details.
 
@@ -119,7 +119,7 @@ src/
     env.ts        reads .env, decides provider, mock mode, and deployment settings
     prompt.ts     the concept system prompt and final image prompt builder
     animals.ts    the random animal that plays the person
-    comedy.ts     the gag recipes, one picked at random per run
+    comedy.ts     the scene types, one picked at random per run
     concept.ts    concept step (Anthropic or OpenAI, structured output)
     image.ts      gpt-image-1 call, content-policy detection
     mock.ts       mock concept and placeholder SVG

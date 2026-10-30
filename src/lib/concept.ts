@@ -8,12 +8,11 @@ import { CONCEPT_SYSTEM_PROMPT, conceptUserPrompt } from './prompt'
 import type { Concept } from './types'
 
 /**
- * Field order matters: the model fills these top to bottom, so it has to name the
- * struggle and the win, brainstorm, and choose before it writes the final gag.
+ * Field order matters: the model fills these top to bottom, so it has to list the
+ * shoutout's concrete details, brainstorm, and choose before it writes the final gag.
  */
 const ConceptSchema = z.object({
-  hardThing: z.string(),
-  win: z.string(),
+  details: z.array(z.string()),
   candidates: z.array(z.string()),
   chosenIndex: z.number().int(),
   concept: z.string(),
@@ -26,7 +25,7 @@ type ConceptDraft = z.infer<typeof ConceptSchema>
 function finalConcept(draft: ConceptDraft): Concept {
   // Logged so the server output shows the alternatives when tuning the prompt.
   console.info(
-    `[concept] hard: ${draft.hardThing} | win: ${draft.win}\n` +
+    `[concept] details: ${draft.details.join(', ')}\n` +
       draft.candidates.map((c, i) => `  ${i === draft.chosenIndex ? '>' : ' '} ${i}. ${c}`).join('\n'),
   )
   return { concept: draft.concept, imagePrompt: draft.imagePrompt }
