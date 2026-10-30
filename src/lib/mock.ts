@@ -4,18 +4,18 @@ import type { Concept } from './types'
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 const MOCK_GAGS = [
-  'A robot doing the worm across a conference stage under disco lights',
-  'A serene cat meditating while buried under 400 glowing notification bubbles',
-  'A tiny firefighter putting out a server rack with a watering can',
-  'A loaf of sourdough wearing a lanyard and leading a standup',
-  'A superhero holding up a bridge made entirely of sticky notes',
+  'A {animal} doing the worm under a disco ball',
+  'A serene {animal} meditating while buried under 400 glowing notification bubbles',
+  'A tiny {animal} firefighter putting out a server rack with a watering can',
+  'A {animal} wearing a lanyard and leading a standup with a loaf of sourdough',
+  'A {animal} superhero holding up a bridge made entirely of sticky notes',
 ]
 
-export async function mockConcept(opts: { shoutout: string; avoid?: string[] }): Promise<Concept> {
+export async function mockConcept(opts: { shoutout: string; animal: string; avoid?: string[] }): Promise<Concept> {
   await sleep(600)
   const avoid = new Set(opts.avoid ?? [])
-  const pool = MOCK_GAGS.filter((g) => !avoid.has(g))
-  const concept = (pool.length ? pool : MOCK_GAGS)[Math.floor(Math.random() * (pool.length || MOCK_GAGS.length))]!
+  const pool = MOCK_GAGS.map((g) => g.replace('{animal}', opts.animal)).filter((g) => !avoid.has(g))
+  const concept = pool.length ? pool[Math.floor(Math.random() * pool.length)]! : `A ${opts.animal} taking a well-earned bow`
   return {
     concept,
     imagePrompt: `${concept}. Wide shot, centred subject, exaggerated pose, cheerful mood. (Mock concept; no model was called.)`,

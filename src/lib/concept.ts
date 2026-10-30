@@ -14,6 +14,8 @@ const ConceptSchema = z.object({
 
 export interface ConceptOptions {
   shoutout: string
+  /** The cute animal that plays the person. Picked at random by the caller. */
+  animal: string
   avoid?: string[]
   tamer?: boolean
 }
