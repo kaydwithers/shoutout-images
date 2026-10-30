@@ -1,4 +1,4 @@
-export type StyleId = 'clay' | 'vector' | 'cartoon' | 'amigurumi'
+export type StyleId = 'clay' | 'vector' | 'cartoon' | 'amigurumi' | 'plush'
 
 export interface ArtStyle {
   id: StyleId
@@ -34,6 +34,12 @@ export const STYLES: ArtStyle[] = [
     label: 'Amigurumi',
     prompt:
       'Adorable hand-crocheted amigurumi plush toy, visible yarn stitches and soft fuzzy texture, chubby rounded body, oversized head, small safety-eye dot eyes and a tiny stitched smile, felt details for props, photographed with soft even lighting like a product shot. The background is one single flat solid pastel colour, completely plain, no gradient, no fabric, no table, no scenery, no lettering.',
+  },
+  {
+    id: 'plush',
+    label: 'Plush toy',
+    prompt:
+      'Soft stuffed plush toy photographed like a product shot: short velvety fur, slightly squashed huggable shape, embroidered eyes and nose, tiny stitched smile, felt accessories for props, gentle even studio lighting with soft shadows. The background is one single flat solid pastel colour, completely plain, no gradient, no fabric, no table, no scenery, no lettering.',
   },
 ]
 

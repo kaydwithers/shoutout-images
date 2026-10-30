@@ -52,6 +52,21 @@ export async function listRecords(limit = 24): Promise<ShoutoutRecord[]> {
     .slice(0, limit)
 }
 
+/** Merges a partial update into a record's JSON sidecar. Returns the updated record, or null if missing. */
+export async function updateRecord(id: string, patch: Partial<ShoutoutRecord>): Promise<ShoutoutRecord | null> {
+  const current = await getRecord(id)
+  if (!current) return null
+  const updated = { ...current, ...patch, id: current.id }
+  await writeFile(path.join(env.generatedDir, `${id}.json`), JSON.stringify(updated, null, 2))
+  return updated
+}
+
+/** Most recently loved results, newest first. */
+export async function listLoved(limit = 3): Promise<ShoutoutRecord[]> {
+  const all = await listRecords(500)
+  return all.filter((r) => r.loved).slice(0, limit)
+}
+
 /** Resolves a generated image file name to a path, refusing anything that isn't ours. */
 export function imagePath(file: string): string | null {
   const match = /^([a-z0-9]{12})\.(png|svg)$/.exec(file)

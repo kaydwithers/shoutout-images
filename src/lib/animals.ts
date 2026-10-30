@@ -1,4 +1,4 @@
-/** The cute animal that stands in for the person. Chosen at random in code, not by the model. */
+/** The cute animal that stands in for the person. Chosen in code, not by the model. */
 export const ANIMALS = [
   'cat',
   'dog',
@@ -41,3 +41,4 @@ export function animalIn(text: string): Animal | undefined {
   const lower = text.toLowerCase()
   return ANIMALS.find((a) => lower.includes(a))
 }
+

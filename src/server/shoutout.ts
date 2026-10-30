@@ -2,16 +2,16 @@ import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 import { animalIn, randomAnimal } from '#/lib/animals'
 import { randomAngle } from '#/lib/comedy'
-import { generateConcept } from '#/lib/concept'
+import { generateConcept, generateIdeas, type ConceptOptions } from '#/lib/concept'
 import { env, mockReason } from '#/lib/env'
 import { ContentPolicyError, renderImage } from '#/lib/image'
 import { getJob, startJob, type ImageJob } from '#/lib/jobs'
-import { mockConcept, mockImage } from '#/lib/mock'
+import { mockConcept, mockIdeas, mockImage } from '#/lib/mock'
 import { finalImagePrompt } from '#/lib/prompt'
 import { consumeImageBudget } from '#/lib/ratelimit'
 import { getStyle, randomStyle, STYLE_IDS, type StyleId } from '#/lib/styles'
-import { getRecord, listRecords, newId, saveRecord } from '#/lib/store'
-import type { Concept, ShoutoutRecord } from '#/lib/types'
+import { getRecord, listLoved, listRecords, newId, saveRecord, updateRecord } from '#/lib/store'
+import type { Concept, Ideas, ShoutoutRecord } from '#/lib/types'
 
 const ShoutoutInput = z.string().trim().min(8, 'Write a little more.').max(600, 'Keep it under 600 characters.')
 const StyleChoice = z.enum([...STYLE_IDS, 'random'])
@@ -34,52 +34,61 @@ export const getStatus = createServerFn({ method: 'GET' }).handler(async (): Pro
   imageQuality: env.imageQuality,
 }))
 
-async function conceptFor(opts: {
-  shoutout: string
-  animal: string
-  angle: string
-  avoid?: string[]
-  tamer?: boolean
-}): Promise<Concept> {
+/** Recent loved results as examples of taste, included in every ideas request. */
+async function lovedExamples(): Promise<Concept[]> {
+  const loved = await listLoved(3)
+  return loved.map((r) => ({ concept: r.concept, imagePrompt: r.imagePrompt, caption: r.caption ?? '' }))
+}
+
+async function ideasFor(opts: ConceptOptions): Promise<Ideas> {
+  return env.mock ? mockIdeas(opts) : generateIdeas(opts)
+}
+
+async function conceptFor(opts: ConceptOptions): Promise<Concept> {
   return env.mock ? mockConcept(opts) : generateConcept(opts)
 }
 
-export interface ConceptResult extends Concept {
+export interface IdeasResult extends Ideas {
   styleId: StyleId
+  animal: string
 }
 
-/** Step 1: turn the shoutout into a visual gag and pick the style. */
-export const createConcept = createServerFn({ method: 'POST' })
+/** Step 1: five gags for the shoutout, with a style picked. The user chooses one. */
+export const createIdeas = createServerFn({ method: 'POST' })
   .validator(
     z.object({
       shoutout: ShoutoutInput,
       style: StyleChoice,
-      /** Concepts already shown for this shoutout, so "another take" goes somewhere new. */
-      avoid: z.array(z.string()).max(10).default([]),
+      /** Concepts already shown for this shoutout, so new ideas go somewhere new. */
+      avoid: z.array(z.string()).max(30).default([]),
       /** The style used last time, so a Random re-roll tends to move. */
       previousStyle: z.enum(STYLE_IDS).optional(),
+      /** Optional thing the user insists the picture includes. */
+      mustInclude: z.string().trim().max(120).optional(),
     }),
   )
-  .handler(async ({ data }): Promise<ConceptResult> => {
+  .handler(async ({ data }): Promise<IdeasResult> => {
     const style = data.style === 'random' ? randomStyle(data.previousStyle) : getStyle(data.style)
     // The animal is randomised in code and never repeats one already used for this shoutout.
     const animal = randomAnimal(data.avoid)
     const angle = randomAngle()
-    const concept = await conceptFor({ shoutout: data.shoutout, animal, angle, avoid: data.avoid })
-    return { ...concept, styleId: style.id }
+    const loved = await lovedExamples()
+    const ideas = await ideasFor({ shoutout: data.shoutout, animal, angle, avoid: data.avoid, mustInclude: data.mustInclude, loved })
+    return { ...ideas, styleId: style.id, animal }
   })
 
 const ImageInput = z.object({
   shoutout: ShoutoutInput,
   concept: z.string().min(1),
   imagePrompt: z.string().min(1),
+  caption: z.string().max(200).default(''),
   styleId: z.enum(STYLE_IDS),
 })
 
 /** Renders the image, with one silent retry on a content-policy refusal, and saves it to generated/. */
 async function renderAndSave(id: string, data: z.infer<typeof ImageInput>): Promise<ShoutoutRecord> {
   const style = getStyle(data.styleId)
-  let concept: Concept = { concept: data.concept, imagePrompt: data.imagePrompt }
+  let concept: Concept = { concept: data.concept, imagePrompt: data.imagePrompt, caption: data.caption }
   let retried = false
 
   const render = async (c: Concept) => {
@@ -118,6 +127,7 @@ async function renderAndSave(id: string, data: z.infer<typeof ImageInput>): Prom
     shoutout: data.shoutout,
     concept: concept.concept,
     imagePrompt: concept.imagePrompt,
+    caption: concept.caption,
     finalPrompt: rendered.prompt,
     styleId: style.id,
     imageFile: `${id}.${env.mock ? 'svg' : 'png'}`,
@@ -157,6 +167,11 @@ export const getImageJob = createServerFn({ method: 'GET' })
     }
     return job
   })
+
+/** Mark a result as loved (or not). Loved gags become taste examples for future ideas. */
+export const setLoved = createServerFn({ method: 'POST' })
+  .validator(z.object({ id: z.string().min(1), loved: z.boolean() }))
+  .handler(async ({ data }): Promise<ShoutoutRecord | null> => updateRecord(data.id, { loved: data.loved }))
 
 export const listGallery = createServerFn({ method: 'GET' }).handler(async () => listRecords(24))
 

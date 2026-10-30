@@ -1,25 +1,43 @@
 import type { ArtStyle } from './styles'
-import type { Concept } from './types'
+import type { Concept, Ideas } from './types'
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
-const MOCK_GAGS = [
-  'A {animal} doing the worm under a disco ball',
-  'A serene {animal} meditating while buried under 400 glowing notification bubbles',
-  'A tiny {animal} firefighter putting out a server rack with a watering can',
-  'A {animal} wearing a lanyard and leading a standup with a loaf of sourdough',
-  'A {animal} superhero holding up a bridge made entirely of sticky notes',
+const MOCK_GAGS: Array<{ concept: string; caption: string }> = [
+  { concept: 'A {animal} doing the worm under a disco ball', caption: 'Floor: cleared.' },
+  { concept: 'A serene {animal} meditating while buried under 400 glowing notification bubbles', caption: 'Inbox zero, inner peace one.' },
+  { concept: 'A tiny {animal} firefighter putting out a server rack with a watering can', caption: 'Hot fix. Literally.' },
+  { concept: 'A {animal} wearing a lanyard and leading a standup with a loaf of sourdough', caption: 'Rise and shine.' },
+  { concept: 'A {animal} superhero holding up a bridge made entirely of sticky notes', caption: 'Noted. Held. Saved.' },
+  { concept: 'A {animal} in a waiter waistcoat balancing an absurdly long dinner table on one paw', caption: 'Table for twenty. Booked.' },
+  { concept: 'A {animal} in pyjamas ironing a giant crumpled spreadsheet flat', caption: 'Pressed and paid.' },
 ]
 
-export async function mockConcept(opts: { shoutout: string; animal: string; angle?: string; avoid?: string[] }): Promise<Concept> {
-  await sleep(600)
-  const avoid = new Set(opts.avoid ?? [])
-  const pool = MOCK_GAGS.map((g) => g.replace('{animal}', opts.animal)).filter((g) => !avoid.has(g))
-  const concept = pool.length ? pool[Math.floor(Math.random() * pool.length)]! : `A ${opts.animal} taking a well-earned bow`
+function fillIn(animal: string, gag: { concept: string; caption: string }): Concept {
+  const concept = gag.concept.replace('{animal}', animal)
   return {
     concept,
+    caption: gag.caption,
     imagePrompt: `${concept}. Wide shot, centred subject, exaggerated pose, cheerful mood. (Mock concept; no model was called.)`,
   }
+}
+
+/** Five canned ideas with the right animal, skipping any already shown. */
+export async function mockIdeas(opts: { shoutout: string; animal: string; angle?: string; avoid?: string[] }): Promise<Ideas> {
+  await sleep(600)
+  const avoid = new Set(opts.avoid ?? [])
+  const pool = MOCK_GAGS.map((g) => fillIn(opts.animal, g)).filter((c) => !avoid.has(c.concept))
+  const shuffled = [...pool].sort(() => Math.random() - 0.5)
+  const candidates = shuffled.slice(0, 5)
+  if (candidates.length === 0) {
+    candidates.push(fillIn(opts.animal, { concept: 'A {animal} taking a well-earned bow', caption: 'Encore.' }))
+  }
+  return { candidates, recommendedIndex: 0 }
+}
+
+export async function mockConcept(opts: { shoutout: string; animal: string; angle?: string; avoid?: string[] }): Promise<Concept> {
+  const ideas = await mockIdeas(opts)
+  return ideas.candidates[ideas.recommendedIndex]!
 }
 
 function escapeXml(s: string) {
@@ -47,6 +65,7 @@ const PALETTE: Record<ArtStyle['id'], { bg: string; fg: string; accent: string }
   vector: { bg: '#dbeafe', fg: '#1e3a8a', accent: '#60a5fa' },
   cartoon: { bg: '#fce7f3', fg: '#831843', accent: '#ec4899' },
   amigurumi: { bg: '#dcfce7', fg: '#14532d', accent: '#22c55e' },
+  plush: { bg: '#ede9fe', fg: '#4c1d95', accent: '#a78bfa' },
 }
 
 /** A placeholder SVG so the whole UI can be exercised without an image API key. */

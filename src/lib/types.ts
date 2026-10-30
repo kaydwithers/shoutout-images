@@ -5,6 +5,14 @@ export interface Concept {
   concept: string
   /** Full prompt sent to the image model (scene only, style is appended separately). */
   imagePrompt: string
+  /** Short punny one-liner shown under the image and baked into the download. */
+  caption: string
+}
+
+/** Five candidate gags for one shoutout, plus the model's own recommendation. */
+export interface Ideas {
+  candidates: Concept[]
+  recommendedIndex: number
 }
 
 export interface ShoutoutRecord {
@@ -13,6 +21,8 @@ export interface ShoutoutRecord {
   shoutout: string
   concept: string
   imagePrompt: string
+  /** Absent on records saved before captions existed. */
+  caption?: string
   /** The complete prompt including the style suffix, exactly as sent to the image model. */
   finalPrompt: string
   styleId: StyleId
@@ -22,6 +32,8 @@ export interface ShoutoutRecord {
   provider: 'anthropic' | 'openai' | 'mock'
   /** True when the first prompt was refused and a tamer concept was used instead. */
   retried: boolean
+  /** Set when someone marks the result as loved; feeds future ideas as examples. */
+  loved?: boolean
 }
 
 export const SAMPLE_SHOUTOUTS = [

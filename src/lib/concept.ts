@@ -5,39 +5,50 @@ import { zodResponseFormat } from 'openai/helpers/zod'
 import { z } from 'zod'
 import { env } from './env'
 import { CONCEPT_SYSTEM_PROMPT, conceptUserPrompt } from './prompt'
-import type { Concept } from './types'
+import type { Concept, Ideas } from './types'
 
 /**
  * Field order matters: the model fills these top to bottom, so it has to list the
- * shoutout's concrete details, brainstorm, and choose before it writes the final gag.
+ * shoutout's concrete details before writing the five gags, and recommend one last.
  */
-const ConceptSchema = z.object({
+const IdeasSchema = z.object({
   details: z.array(z.string()),
-  candidates: z.array(z.string()),
-  chosenIndex: z.number().int(),
-  concept: z.string(),
-  imagePrompt: z.string(),
+  candidates: z.array(
+    z.object({
+      concept: z.string(),
+      imagePrompt: z.string(),
+      caption: z.string(),
+    }),
+  ),
+  recommendedIndex: z.number().int(),
 })
 
-type ConceptDraft = z.infer<typeof ConceptSchema>
+type IdeasDraft = z.infer<typeof IdeasSchema>
 
-/** Keeps only what the rest of the app stores; the working-out stays in the model's head. */
-function finalConcept(draft: ConceptDraft): Concept {
-  // Logged so the server output shows the alternatives when tuning the prompt.
+function toIdeas(draft: IdeasDraft): Ideas {
+  const candidates: Concept[] = draft.candidates.filter((c) => c.concept && c.imagePrompt).slice(0, 5)
+  if (candidates.length === 0) throw new Error('The concept model returned no usable ideas.')
+  const recommendedIndex = Math.min(Math.max(draft.recommendedIndex, 0), candidates.length - 1)
+  // Logged so the server output shows the details and alternatives when tuning the prompt.
   console.info(
     `[concept] details: ${draft.details.join(', ')}\n` +
-      draft.candidates.map((c, i) => `  ${i === draft.chosenIndex ? '>' : ' '} ${i}. ${c}`).join('\n'),
+      candidates.map((c, i) => `  ${i === recommendedIndex ? '>' : ' '} ${i}. ${c.concept}  ("${c.caption}")`).join('\n'),
   )
-  return { concept: draft.concept, imagePrompt: draft.imagePrompt }
+  return { candidates, recommendedIndex }
 }
 
 export interface ConceptOptions {
   shoutout: string
   /** The cute animal that plays the person. Picked at random by the caller. */
   animal: string
-  /** The comedic angle to build the gag around. Picked at random by the caller. */
+  /** The scene type to build the gags around. Picked at random by the caller. */
   angle: string
+  /** Concepts already shown for this shoutout. */
   avoid?: string[]
+  /** Something the user insists must appear in the picture. */
+  mustInclude?: string
+  /** Recent gags people marked as loved, used as examples of the taste to aim for. */
+  loved?: Concept[]
   tamer?: boolean
 }
 
@@ -54,13 +65,13 @@ function openaiClient() {
   return openai
 }
 
-async function conceptViaAnthropic(opts: ConceptOptions): Promise<Concept> {
+async function ideasViaAnthropic(opts: ConceptOptions): Promise<Ideas> {
   const response = await anthropicClient().messages.parse({
     model: env.conceptModel.anthropic,
-    max_tokens: 3000,
+    max_tokens: 4000,
     system: CONCEPT_SYSTEM_PROMPT,
     messages: [{ role: 'user', content: conceptUserPrompt(opts) }],
-    output_config: { effort: 'medium', format: zodOutputFormat(ConceptSchema) },
+    output_config: { effort: 'medium', format: zodOutputFormat(IdeasSchema) },
   })
   if (response.stop_reason === 'refusal') {
     throw new Error('The concept model declined this shoutout.')
@@ -68,25 +79,32 @@ async function conceptViaAnthropic(opts: ConceptOptions): Promise<Concept> {
   if (!response.parsed_output) {
     throw new Error('The concept model returned an unparseable response.')
   }
-  return finalConcept(response.parsed_output)
+  return toIdeas(response.parsed_output)
 }
 
-async function conceptViaOpenAI(opts: ConceptOptions): Promise<Concept> {
+async function ideasViaOpenAI(opts: ConceptOptions): Promise<Ideas> {
   const completion = await openaiClient().chat.completions.parse({
     model: env.conceptModel.openai,
     messages: [
       { role: 'system', content: CONCEPT_SYSTEM_PROMPT },
       { role: 'user', content: conceptUserPrompt(opts) },
     ],
-    response_format: zodResponseFormat(ConceptSchema, 'concept'),
+    response_format: zodResponseFormat(IdeasSchema, 'ideas'),
   })
   const parsed = completion.choices[0]?.message.parsed
   if (!parsed) {
     throw new Error('The concept model returned an unparseable response.')
   }
-  return finalConcept(parsed)
+  return toIdeas(parsed)
 }
 
+/** Five fully written gags for the shoutout, plus the model's recommendation. */
+export async function generateIdeas(opts: ConceptOptions): Promise<Ideas> {
+  return env.conceptProvider === 'anthropic' ? ideasViaAnthropic(opts) : ideasViaOpenAI(opts)
+}
+
+/** Just the recommended gag, for the automatic retry after a content-policy refusal. */
 export async function generateConcept(opts: ConceptOptions): Promise<Concept> {
-  return env.conceptProvider === 'anthropic' ? conceptViaAnthropic(opts) : conceptViaOpenAI(opts)
+  const ideas = await generateIdeas(opts)
+  return ideas.candidates[ideas.recommendedIndex]!
 }
