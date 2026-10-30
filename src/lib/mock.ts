@@ -46,6 +46,7 @@ const PALETTE: Record<ArtStyle['id'], { bg: string; fg: string; accent: string }
   clay: { bg: '#fde2e4', fg: '#7a2e3a', accent: '#f4a6b0' },
   vector: { bg: '#dbeafe', fg: '#1e3a8a', accent: '#60a5fa' },
   cartoon: { bg: '#fce7f3', fg: '#831843', accent: '#ec4899' },
+  amigurumi: { bg: '#dcfce7', fg: '#14532d', accent: '#22c55e' },
 }
 
 /** A placeholder SVG so the whole UI can be exercised without an image API key. */

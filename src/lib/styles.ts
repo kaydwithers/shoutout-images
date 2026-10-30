@@ -1,4 +1,4 @@
-export type StyleId = 'clay' | 'vector' | 'cartoon'
+export type StyleId = 'clay' | 'vector' | 'cartoon' | 'amigurumi'
 
 export interface ArtStyle {
   id: StyleId
@@ -25,6 +25,12 @@ export const STYLES: ArtStyle[] = [
     label: 'Cute cartoon',
     prompt:
       'Cute modern cartoon character, kawaii-inspired: small rounded body, big head, large sparkly eyes, tiny mouth, blushing cheeks, soft smooth cel shading, clean medium-weight outlines, gentle candy and pastel colours. The background is one single flat solid colour, completely plain, no gradient, no pattern, no scenery, no sparkles or decorations, no speech bubbles, no lettering.',
+  },
+  {
+    id: 'amigurumi',
+    label: 'Amigurumi',
+    prompt:
+      'Adorable hand-crocheted amigurumi plush toy, visible yarn stitches and soft fuzzy texture, chubby rounded body, oversized head, small safety-eye dot eyes and a tiny stitched smile, felt details for props, photographed with soft even lighting like a product shot. The background is one single flat solid pastel colour, completely plain, no gradient, no fabric, no table, no scenery, no lettering.',
   },
 ]
 
