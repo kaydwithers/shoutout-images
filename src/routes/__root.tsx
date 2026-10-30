@@ -32,6 +32,13 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
     ],
     links: [
+      // Satoshi is served by Fontshare (free for personal and commercial use).
+      { rel: 'preconnect', href: 'https://api.fontshare.com' },
+      { rel: 'preconnect', href: 'https://cdn.fontshare.com', crossOrigin: 'anonymous' },
+      {
+        rel: 'stylesheet',
+        href: 'https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap',
+      },
       {
         rel: 'stylesheet',
         href: appCss,

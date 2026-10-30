@@ -143,9 +143,9 @@ generated/               output, gitignored
 
 Stack: TanStack Start, TanStack Router, TanStack Query, React 19, Tailwind v4, TypeScript end to end.
 
-## Tweaking the colours
+## Tweaking the colours and font
 
-Light and dark palettes live in `src/styles.css` as CSS variables (`--page`, `--card`, `--ink`, `--accent`, and so on), exposed to Tailwind as `bg-page`, `text-ink`, `bg-accent`, etc. The four brand colours are `wiggle-red`, `wiggle-yellow`, `wiggle-blue`, `wiggle-purple`. Dark mode is the `dark` class on `<html>`, toggled by `src/components/ThemeToggle.tsx`.
+Light and dark palettes live in `src/styles.css` as CSS variables (`--page`, `--card`, `--ink`, `--accent`, and so on), exposed to Tailwind as `bg-page`, `text-ink`, `bg-accent`, etc. The four brand colours are `wiggle-red`, `wiggle-yellow`, `wiggle-blue`, `wiggle-purple`. Dark mode is the `dark` class on `<html>`, toggled by `src/components/ThemeToggle.tsx`. The typeface is Satoshi, loaded from Fontshare in `src/routes/__root.tsx` and set as `--font-sans` in `src/styles.css`.
 
 ## Tweaking the humour
 

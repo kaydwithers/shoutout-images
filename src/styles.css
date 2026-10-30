@@ -3,6 +3,11 @@
 /* Dark mode is toggled by a `dark` class on <html>, not by the OS setting alone. */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Satoshi (loaded from Fontshare in __root.tsx) becomes Tailwind's default sans font. */
+@theme {
+  --font-sans: 'Satoshi', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
 /* The four skivvy colours. Fixed in both modes. */
 @theme {
   --color-wiggle-red: #e4002b;
