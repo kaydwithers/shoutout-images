@@ -36,9 +36,9 @@ export const env = {
     anthropic: process.env.ANTHROPIC_MODEL?.trim() || 'claude-haiku-5-5',
     openai: process.env.OPENAI_TEXT_MODEL?.trim() || 'gpt-5-mini',
   },
-  imageModel: process.env.OPENAI_IMAGE_MODEL?.trim() || 'gpt-image-1',
+  imageModel: process.env.OPENAI_IMAGE_MODEL?.trim() || 'gpt-image-2.5-flare',
   imageSize: (process.env.IMAGE_SIZE?.trim() || '1024x1024') as '1024x1024' | '1536x1024' | '1024x1536',
-  imageQuality: (process.env.IMAGE_QUALITY?.trim() || 'medium') as 'low' | 'medium' | 'high',
+  imageQuality: (process.env.IMAGE_QUALITY?.trim() || 'medium') as 'low' | 'medium' | 'high' | 'auto',
   generatedDir: process.env.GENERATED_DIR?.trim()
     ? path.resolve(process.env.GENERATED_DIR.trim())
     : path.resolve(process.cwd(), 'generated'),

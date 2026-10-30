@@ -43,6 +43,23 @@ export async function renderImage(prompt: string): Promise<Buffer> {
     if (isContentPolicyRejection(err)) {
       throw new ContentPolicyError('The image model refused this prompt.')
     }
-    throw err
+    throw friendlyApiError(err)
   }
+}
+
+/** Turns the most common OpenAI setup failures into messages that say what to do. */
+function friendlyApiError(err: unknown): unknown {
+  if (!(err instanceof OpenAI.APIError)) return err
+  const message = err.message ?? ''
+  if (/must be verified/i.test(message)) {
+    return new Error(
+      `OpenAI says your organisation must be verified to use ${env.imageModel}. Go to platform.openai.com, then Settings, Organization, General, and click Verify Organization. Access can take up to 15 minutes to arrive after verifying.`,
+    )
+  }
+  if (/does not exist|do not have access/i.test(message)) {
+    return new Error(
+      `OpenAI does not offer the model "${env.imageModel}" to this account. Check OPENAI_IMAGE_MODEL against the current list at developers.openai.com (gpt-image-2.5-flare is the current default), and make sure the organisation is verified.`,
+    )
+  }
+  return err
 }

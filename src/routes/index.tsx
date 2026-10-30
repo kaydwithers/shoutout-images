@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { GalleryStrip, galleryQueryOptions } from '#/components/GalleryStrip'
@@ -8,7 +8,24 @@ import { StyleBadge } from '#/components/StyleBadge'
 import { ThemeToggle } from '#/components/ThemeToggle'
 import { STYLES, type StyleId } from '#/lib/styles'
 import { SAMPLE_SHOUTOUTS, type ShoutoutRecord } from '#/lib/types'
-import { createConcept, createImage, type ConceptResult } from '#/server/shoutout'
+import { createConcept, getImageJob, startImage, type ConceptResult } from '#/server/shoutout'
+
+const POLL_MS = 2000
+
+/** Starts the image job and polls until it finishes. Rejects with the job's error message. */
+async function generateImage(
+  data: Parameters<typeof startImage>[0]['data'],
+  isCurrent: () => boolean,
+): Promise<ShoutoutRecord> {
+  const { jobId } = await startImage({ data })
+  for (;;) {
+    await new Promise((r) => setTimeout(r, POLL_MS))
+    if (!isCurrent()) throw new Error('cancelled')
+    const job = await getImageJob({ data: { jobId } })
+    if (job.status === 'done') return job.record
+    if (job.status === 'error') throw new Error(job.error)
+  }
+}
 
 export const Route = createFileRoute('/')({
   loader: async ({ context }) => {
@@ -33,12 +50,16 @@ function Home() {
   const [record, setRecord] = useState<ShoutoutRecord | null>(null)
   const [error, setError] = useState<string | null>(null)
 
+  // Each run gets a number so a stale poll loop can't overwrite a newer run's state.
+  const runId = useRef(0)
+
   const conceptMutation = useMutation({ mutationFn: createConcept })
-  const imageMutation = useMutation({ mutationFn: createImage })
 
   const busy = phase === 'concept' || phase === 'image'
 
   async function run(avoid: string[], previousStyle?: StyleId) {
+    const thisRun = ++runId.current
+    const isCurrent = () => runId.current === thisRun
     setError(null)
     setRecord(null)
     setPhase('concept')
@@ -46,17 +67,20 @@ function Home() {
       const nextConcept = await conceptMutation.mutateAsync({
         data: { shoutout, style: styleChoice, avoid, previousStyle },
       })
+      if (!isCurrent()) return
       setConcept(nextConcept)
       setUsedConcepts([...avoid, nextConcept.concept])
       setPhase('image')
-      const saved = await imageMutation.mutateAsync({
-        data: {
+      const saved = await generateImage(
+        {
           shoutout,
           concept: nextConcept.concept,
           imagePrompt: nextConcept.imagePrompt,
           styleId: nextConcept.styleId,
         },
-      })
+        isCurrent,
+      )
+      if (!isCurrent()) return
       setRecord(saved)
       // The server may have swapped in a tamer concept after a refusal.
       if (saved.concept !== nextConcept.concept) {
@@ -66,6 +90,7 @@ function Home() {
       setPhase('done')
       void queryClient.invalidateQueries({ queryKey: ['gallery'] })
     } catch (err) {
+      if (!isCurrent()) return
       setPhase('error')
       setError(err instanceof Error ? err.message : 'Something went wrong.')
     }
@@ -173,7 +198,7 @@ function Home() {
 
         {phase === 'image' && (
           <div className="flex aspect-square w-full animate-pulse items-center justify-center rounded-2xl border border-dashed border-line bg-well text-ink-muted">
-            <StatusLine spinner>Painting… this usually takes 15 to 60 seconds.</StatusLine>
+            <StatusLine spinner>Painting… this usually takes 20 to 90 seconds.</StatusLine>
           </div>
         )}
 

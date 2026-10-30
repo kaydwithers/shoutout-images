@@ -10,7 +10,7 @@ Personal prototype. Runs locally, or on Render or Railway behind a password (see
 ## How it works
 
 1. **Concept step.** Claude Haiku 5.5 (or an OpenAI text model as fallback) turns the shoutout into one funny visual gag and writes an image prompt. The person is abstracted away: never named, never depicted. Abstract shoutouts ("for being so patient") get an invented visual metaphor.
-2. **Image step.** `gpt-image-1` renders the prompt in one of three house styles: clay figurine, flat vector, or retro comic. Random by default, or pick one. No text is ever requested in the image.
+2. **Image step.** OpenAI's `gpt-image-2.5-flare` renders the prompt in one of three house styles: clay figurine, flat vector, or retro comic. Random by default, or pick one. No text is ever requested in the image. Rendering runs as a background job that the page polls every two seconds, so a slow render never trips a hosting proxy's request timeout.
 3. **Save.** Every result lands in `generated/` as a PNG plus a JSON sidecar with the shoutout, concept, style, and the exact prompt sent. The home page shows a strip of recent results; click one for details.
 
 If the image model refuses a prompt, the app silently asks for a tamer concept once, then shows an error.
@@ -28,8 +28,10 @@ cp .env.example .env
 
 ### 2. Get an OpenAI key (images)
 
-1. Sign in at platform.openai.com and add a prepaid balance under Settings → Billing. Medium quality costs about $0.04 per image.
-2. Verify the organisation: Settings → Organization → General → **Verify Organization**. `gpt-image-1` returns a 403 without this. It is an ID check that usually takes minutes.
+1. Sign in at platform.openai.com and add a prepaid balance under Settings → Billing. A medium-quality square image costs a few cents.
+2. Verify the organisation: Settings → Organization → General → **Verify Organization**. OpenAI's docs say GPT Image models may require this; without it the API returns a 403. It is an ID check that usually takes minutes, and access can take up to 15 minutes to arrive afterwards.
+
+   `gpt-image-1` was shut down by OpenAI on 23 October 2026 and `gpt-image-1.5` and `gpt-image-1-mini` go on 1 December 2026. The default here is the recommended replacement, `gpt-image-2.5-flare`. Override with `OPENAI_IMAGE_MODEL` (for example `gpt-image-2.5-sunburst` for more precise edits).
 3. Create a key under API Keys and put it in `.env` as `OPENAI_API_KEY`.
 
 ### 3. Get an Anthropic key (concepts, recommended)
@@ -62,10 +64,10 @@ All in `.env`. See `.env.example` for the full list.
 | `CONCEPT_PROVIDER` | `anthropic` if its key is set, else `openai` | Force `anthropic` or `openai`. |
 | `MOCK` | off | `1` forces placeholder images. |
 | `IMAGE_SIZE` | `1024x1024` | Also `1536x1024`, `1024x1536`. |
-| `IMAGE_QUALITY` | `medium` | `low` (~$0.01), `medium` (~$0.04), `high` (~$0.17). |
+| `IMAGE_QUALITY` | `medium` | `low`, `medium`, `high`; the 2.5 models also accept `xhigh`, `max`, `auto`. Higher costs more. |
 | `ANTHROPIC_MODEL` | `claude-haiku-5-5` | |
 | `OPENAI_TEXT_MODEL` | `gpt-5-mini` | Used when the concept provider is OpenAI. |
-| `OPENAI_IMAGE_MODEL` | `gpt-image-1` | |
+| `OPENAI_IMAGE_MODEL` | `gpt-image-2.5-flare` | Also `gpt-image-2.5-sunburst`, `gpt-image-2`. |
 | `APP_PASSWORD` | off | When set, the whole site asks for this password via HTTP Basic auth. Any username. |
 | `GENERATED_DIR` | `./generated` | Where images are saved. Point at a persistent volume in production. |
 | `IMAGE_HOURLY_LIMIT` | `30` | Max real images per rolling hour across all users. Mock images don't count. |
@@ -123,10 +125,11 @@ src/
     styles.ts     the three house styles
     types.ts      record type and sample shoutouts
     ratelimit.ts  hourly image budget
+    jobs.ts       in-memory background image jobs the browser polls
     download.ts   client-side canvas composite for "Download with caption"
   start.ts        global request middleware (HTTP Basic auth password gate)
   server/
-    shoutout.ts   TanStack Start server functions (createConcept, createImage, gallery)
+    shoutout.ts   TanStack Start server functions (createConcept, startImage, getImageJob, gallery)
   routes/
     index.tsx            generator page
     gallery/$id.tsx      read-only detail view
