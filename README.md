@@ -73,7 +73,7 @@ All in `.env`. See `.env.example` for the full list.
 `render.yaml` declares the service, so deployment is a Blueprint:
 
 1. **Set an OpenAI spend limit first.** platform.openai.com → Settings → Limits.
-2. Sign in at render.com with GitHub → New → **Blueprint** → pick `shoutout-images` → Apply. Render builds with `npm ci && npm run build` and starts with `npm start`.
+2. Sign in at render.com with GitHub → New → **Blueprint** → pick `shoutout-images` → Apply. Render builds with `npm ci && npm run build` on Node 24 and starts with `npm start`.
 3. When prompted for `OPENAI_API_KEY` and `ANTHROPIC_API_KEY`, paste them, or leave both blank to deploy in mock mode.
 4. `APP_PASSWORD` is generated for you. Copy it from the service's Environment tab. Any username plus that password gets you in.
 5. Open the service URL. The first request after 15 idle minutes takes up to a minute while the free instance wakes.
@@ -89,7 +89,7 @@ The app builds to a plain Node server via the Nitro adapter (`npm run build`, th
 **Pricing note.** Railway's trial gives a one-time $5 credit for 30 days. After that the Free plan has about $1 of monthly credit, which is not enough to keep a service always on, and Hobby is $5 a month with $5 of usage included. Check railway.com/pricing before relying on the free tier.
 
 1. **Set an OpenAI spend limit first.** platform.openai.com → Settings → Limits. A hard monthly cap is the real safety net.
-2. **Create the project.** railway.com → New Project → Deploy from GitHub repo → pick `shoutout-images`. Railway detects Node, runs `npm run build`, and starts with `npm start`. Node 22 or newer is required (`engines` in package.json says so).
+2. **Create the project.** railway.com → New Project → Deploy from GitHub repo → pick `shoutout-images`. Railway detects Node, runs `npm run build`, and starts with `npm start`. Node 22 or newer is required (`engines` in package.json says so). Set `NODE_VERSION=24` so Railway's npm matches the lock file.
 3. **Add a volume.** On the service → Volumes → Add Volume, mount path `/data`.
 4. **Set variables.** Service → Variables:
 

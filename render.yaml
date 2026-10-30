@@ -12,7 +12,7 @@ services:
     autoDeployTrigger: commit
     envVars:
       - key: NODE_VERSION
-        value: "22"
+        value: "24"
       - key: APP_PASSWORD
         generateValue: true # Render generates a random password; copy it from the dashboard
       - key: IMAGE_HOURLY_LIMIT
