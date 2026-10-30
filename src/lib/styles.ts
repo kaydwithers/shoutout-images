@@ -12,19 +12,19 @@ export const STYLES: ArtStyle[] = [
     id: 'clay',
     label: 'Clay figurine',
     prompt:
-      'Playful 3D clay figurine render, handmade plasticine texture with visible fingerprints, soft studio lighting, bright pastel seamless background, shallow depth of field, charming and slightly goofy.',
+      'Adorable chunky 3D clay figurine, rounded squishy proportions, oversized head, tiny dot eyes and a small happy smile, handmade plasticine texture, soft even studio lighting. The background is one single flat solid pastel colour, completely plain, no gradient, no floor line, no scenery, no props beyond what the gag needs.',
   },
   {
     id: 'vector',
     label: 'Flat vector',
     prompt:
-      'Bold flat vector illustration, thick clean outlines, limited bright palette of five colours, simple geometric shapes, sticker-like composition on a solid background, playful and energetic.',
+      'Cute flat vector sticker illustration, soft rounded shapes, thick clean outlines, big friendly eyes and rosy cheeks, limited cheerful palette of five colours, simple and bold. The background is one single flat solid colour, completely plain, no gradient, no pattern, no scenery, no texture.',
   },
   {
     id: 'comic',
-    label: 'Retro comic',
+    label: 'Retro cartoon',
     prompt:
-      'Retro pop-art comic panel, Ben-Day halftone dots, heavy black ink outlines, saturated primary colours, dynamic action lines, 1960s comic book print texture. No speech bubbles, no lettering.',
+      'Cute retro cartoon character in the style of a friendly 1960s mascot, soft rounded body, big expressive eyes, bold black ink outlines, saturated candy colours, light halftone shading on the character only. The background is one single flat solid colour, completely plain, no halftone, no action lines, no panel border, no speech bubbles, no lettering.',
   },
 ]
 
