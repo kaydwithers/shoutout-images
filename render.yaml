@@ -1,0 +1,23 @@
+# Render Blueprint. In the Render dashboard: New → Blueprint → pick this repo.
+# Free tier: no persistent disk, so the gallery resets on spin-down or redeploy.
+services:
+  - type: web
+    name: shoutout-images
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /healthz
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: APP_PASSWORD
+        generateValue: true # Render generates a random password; copy it from the dashboard
+      - key: IMAGE_HOURLY_LIMIT
+        value: "30"
+      - key: OPENAI_API_KEY
+        sync: false # entered in the dashboard; leave blank to run in mock mode
+      - key: ANTHROPIC_API_KEY
+        sync: false

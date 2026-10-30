@@ -11,6 +11,7 @@ function timingSafeEqual(a: string, b: string): boolean {
 /** HTTP Basic auth across every request when APP_PASSWORD is set. Any username works. */
 const passwordGate = createMiddleware({ type: 'request' }).server(async ({ next, request }) => {
   if (!env.appPassword) return next()
+  if (new URL(request.url).pathname === '/healthz') return next()
 
   const header = request.headers.get('authorization') ?? ''
   if (header.startsWith('Basic ')) {

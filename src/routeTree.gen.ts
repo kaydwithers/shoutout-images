@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as HealthzRouteImport } from './routes/healthz'
 import { Route as GalleryIdRouteImport } from './routes/gallery/$id'
 import { Route as ApiImagesFileRouteImport } from './routes/api/images/$file'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HealthzRoute = HealthzRouteImport.update({
+  id: '/healthz',
+  path: '/healthz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GalleryIdRoute = GalleryIdRouteImport.update({
@@ -31,30 +37,34 @@ const ApiImagesFileRoute = ApiImagesFileRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/healthz': typeof HealthzRoute
   '/gallery/$id': typeof GalleryIdRoute
   '/api/images/$file': typeof ApiImagesFileRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/healthz': typeof HealthzRoute
   '/gallery/$id': typeof GalleryIdRoute
   '/api/images/$file': typeof ApiImagesFileRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/healthz': typeof HealthzRoute
   '/gallery/$id': typeof GalleryIdRoute
   '/api/images/$file': typeof ApiImagesFileRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/gallery/$id' | '/api/images/$file'
+  fullPaths: '/' | '/healthz' | '/gallery/$id' | '/api/images/$file'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/gallery/$id' | '/api/images/$file'
-  id: '__root__' | '/' | '/gallery/$id' | '/api/images/$file'
+  to: '/' | '/healthz' | '/gallery/$id' | '/api/images/$file'
+  id: '__root__' | '/' | '/healthz' | '/gallery/$id' | '/api/images/$file'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HealthzRoute: typeof HealthzRoute
   GalleryIdRoute: typeof GalleryIdRoute
   ApiImagesFileRoute: typeof ApiImagesFileRoute
 }
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/healthz': {
+      id: '/healthz'
+      path: '/healthz'
+      fullPath: '/healthz'
+      preLoaderRoute: typeof HealthzRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gallery/$id': {
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HealthzRoute: HealthzRoute,
   GalleryIdRoute: GalleryIdRoute,
   ApiImagesFileRoute: ApiImagesFileRoute,
 }

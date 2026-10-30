@@ -5,7 +5,7 @@ Paste a workplace shoutout, get a ridiculous picture of it.
 > "Shoutout to John for dressing up as a robot at our recent conference and doing funny dances."
 > becomes a clay figurine of a robot doing the worm under disco lights.
 
-Personal prototype. Runs locally, or on Railway behind a password (see Deploying).
+Personal prototype. Runs locally, or on Render or Railway behind a password (see Deploying).
 
 ## How it works
 
@@ -68,6 +68,20 @@ All in `.env`. See `.env.example` for the full list.
 | `GENERATED_DIR` | `./generated` | Where images are saved. Point at a persistent volume in production. |
 | `IMAGE_HOURLY_LIMIT` | `30` | Max real images per rolling hour across all users. Mock images don't count. |
 
+## Deploying to Render (free)
+
+`render.yaml` declares the service, so deployment is a Blueprint:
+
+1. **Set an OpenAI spend limit first.** platform.openai.com → Settings → Limits.
+2. Sign in at render.com with GitHub → New → **Blueprint** → pick `shoutout-images` → Apply. Render builds with `npm ci && npm run build` and starts with `npm start`.
+3. When prompted for `OPENAI_API_KEY` and `ANTHROPIC_API_KEY`, paste them, or leave both blank to deploy in mock mode.
+4. `APP_PASSWORD` is generated for you. Copy it from the service's Environment tab. Any username plus that password gets you in.
+5. Open the service URL. The first request after 15 idle minutes takes up to a minute while the free instance wakes.
+
+Free-tier caveat: no persistent disk, so the gallery resets whenever the service spins down or redeploys. For a permanent gallery, move to Railway with a volume (below) or swap `src/lib/store.ts` for object storage such as Cloudflare R2.
+
+`/healthz` is exempt from the password gate so Render's health check passes.
+
 ## Deploying to Railway
 
 The app builds to a plain Node server via the Nitro adapter (`npm run build`, then `npm start`), which is what Railway expects. Images need a persistent volume, and the public URL needs a password so strangers can't spend your OpenAI balance.
@@ -115,6 +129,8 @@ src/
     index.tsx            generator page
     gallery/$id.tsx      read-only detail view
     api/images/$file.ts  serves files from generated/
+    healthz.ts           unauthenticated liveness check
+render.yaml              Render Blueprint (free web service)
   components/            ResultCard, GalleryStrip, StyleBadge, MockBadge
 generated/               output, gitignored
 ```
