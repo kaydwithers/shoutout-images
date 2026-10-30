@@ -5,7 +5,6 @@ import { GalleryStrip, galleryQueryOptions } from '#/components/GalleryStrip'
 import { MockBadge, statusQueryOptions } from '#/components/MockBadge'
 import { ResultCard } from '#/components/ResultCard'
 import { StyleBadge } from '#/components/StyleBadge'
-import { ThemeToggle } from '#/components/ThemeToggle'
 import { STYLES, type StyleId } from '#/lib/styles'
 import { SAMPLE_SHOUTOUTS, type ShoutoutRecord } from '#/lib/types'
 import { createConcept, getImageJob, startImage, type ConceptResult } from '#/server/shoutout'
@@ -39,6 +38,11 @@ export const Route = createFileRoute('/')({
 
 type StyleChoice = StyleId | 'random'
 type Phase = 'idle' | 'concept' | 'image' | 'done' | 'error'
+
+const primaryButton =
+  'inline-flex h-10 items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-ink transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50'
+const secondaryButton =
+  'inline-flex h-10 items-center justify-center rounded-lg border border-line bg-card px-4 text-sm font-semibold text-ink transition-colors hover:border-line-strong hover:bg-well disabled:cursor-not-allowed disabled:opacity-50'
 
 function Home() {
   const queryClient = useQueryClient()
@@ -115,24 +119,18 @@ function Home() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-      <header className="mb-8 space-y-3">
-        <div className="flex items-start justify-between gap-4">
-          <h1 className="text-4xl font-black tracking-tight sm:text-5xl">
-            <span className="text-wiggle-red">Shout</span>
-            <span className="text-wiggle-yellow">out</span>{' '}
-            <span className="text-wiggle-blue">Ima</span>
-            <span className="text-wiggle-purple">ges</span>
-          </h1>
-          <ThemeToggle className="shrink-0" />
-        </div>
-        <p className="text-lg text-ink-muted">Paste a shoutout. Get a ridiculous picture of it.</p>
+    <main className="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-14">
+      <div className="mb-8 space-y-3">
+        <h1 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl">Turn a shoutout into a picture.</h1>
+        <p className="max-w-prose text-base text-ink-muted">
+          Paste a workplace shoutout. We find the visual gag in it and paint it in one of three house styles.
+        </p>
         <MockBadge />
-      </header>
+      </div>
 
-      <form onSubmit={onSubmit} className="space-y-4 rounded-2xl border border-line bg-card p-5 shadow-sm">
+      <form onSubmit={onSubmit} className="rounded-xl border border-line bg-card p-4 sm:p-5">
         <label className="block">
-          <span className="mb-1 block text-sm font-semibold text-ink-muted">Shoutout</span>
+          <span className="mb-1.5 block text-sm font-medium text-ink">Shoutout</span>
           <textarea
             value={shoutout}
             onChange={(e) => setShoutout(e.target.value)}
@@ -140,18 +138,18 @@ function Home() {
             maxLength={600}
             disabled={busy}
             placeholder="Shoutout to Sam for bringing homemade sourdough to every single standup this month."
-            className="w-full resize-y rounded-xl border border-line bg-field px-4 py-3 text-base text-ink placeholder:text-ink-faint focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30 disabled:opacity-60"
+            className="w-full resize-y rounded-lg border border-line bg-field px-3.5 py-3 text-base leading-relaxed text-ink placeholder:text-ink-faint transition-colors hover:border-line-strong focus:border-line-strong focus:outline-none disabled:opacity-60"
           />
         </label>
 
-        <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
           <label className="block">
-            <span className="mb-1 block text-sm font-semibold text-ink-muted">Style</span>
+            <span className="mb-1.5 block text-sm font-medium text-ink">Style</span>
             <select
               value={styleChoice}
               onChange={(e) => setStyleChoice(e.target.value as StyleChoice)}
               disabled={busy}
-              className="rounded-lg border border-line bg-field px-3 py-2 text-sm text-ink focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
+              className="h-10 rounded-lg border border-line bg-field px-3 pr-8 text-sm text-ink transition-colors hover:border-line-strong focus:border-line-strong focus:outline-none disabled:opacity-60"
             >
               <option value="random">Random</option>
               {STYLES.map((s) => (
@@ -163,49 +161,42 @@ function Home() {
           </label>
 
           <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={onSurprise}
-              disabled={busy}
-              className="rounded-lg border-2 border-wiggle-purple px-4 py-2 text-sm font-semibold text-wiggle-purple transition hover:bg-wiggle-purple hover:text-white disabled:opacity-50 dark:border-wiggle-blue dark:text-sky-300 dark:hover:bg-wiggle-blue dark:hover:text-white"
-            >
+            <button type="button" onClick={onSurprise} disabled={busy} className={secondaryButton}>
               Surprise me
             </button>
-            <button
-              type="submit"
-              disabled={busy || shoutout.trim().length < 8}
-              className="rounded-lg bg-accent px-5 py-2 text-sm font-bold text-accent-ink shadow-sm transition hover:bg-accent-hover disabled:opacity-50"
-            >
-              {busy ? 'Generating…' : 'Generate image'}
+            <button type="submit" disabled={busy || shoutout.trim().length < 8} className={primaryButton}>
+              {busy ? 'Generating…' : 'Generate'}
             </button>
           </div>
         </div>
       </form>
 
-      <section className="mt-8 space-y-4" aria-live="polite">
+      <section className="mt-6 space-y-4" aria-live="polite">
         {phase === 'concept' && (
-          <StatusLine spinner>Thinking of a visual gag…</StatusLine>
+          <Panel>
+            <StatusLine spinner>Thinking of a visual gag…</StatusLine>
+          </Panel>
         )}
 
         {concept && phase !== 'concept' && (
-          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-line bg-well px-4 py-3">
+          <Panel className="flex flex-wrap items-center gap-3">
             <StyleBadge styleId={concept.styleId} />
-            <p className="text-ink">
-              <span className="font-semibold">Concept:</span> {concept.concept}
+            <p className="text-sm text-ink">
+              <span className="font-medium text-ink-muted">Concept</span> {concept.concept}
             </p>
-          </div>
+          </Panel>
         )}
 
         {phase === 'image' && (
-          <div className="flex aspect-square w-full animate-pulse items-center justify-center rounded-2xl border border-dashed border-line bg-well text-ink-muted">
+          <div className="flex aspect-square w-full items-center justify-center rounded-xl border border-dashed border-line-strong bg-well">
             <StatusLine spinner>Painting… this usually takes 20 to 90 seconds.</StatusLine>
           </div>
         )}
 
         {phase === 'error' && error && (
-          <div className="rounded-xl border border-wiggle-red/40 bg-wiggle-red/10 px-4 py-3 text-sm text-ink">
-            <p className="font-semibold text-wiggle-red dark:text-red-300">Couldn't generate that one.</p>
-            <p>{error}</p>
+          <div role="alert" className="rounded-xl border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-ink">
+            <p className="font-semibold text-danger">Couldn't generate that one.</p>
+            <p className="mt-1">{error}</p>
           </div>
         )}
 
@@ -213,31 +204,33 @@ function Home() {
 
         {(phase === 'done' || phase === 'error') && concept && (
           <div>
-            <button
-              type="button"
-              onClick={onAnotherTake}
-              disabled={busy}
-              className="rounded-lg border-2 border-wiggle-blue bg-card px-4 py-2 text-sm font-semibold text-wiggle-blue transition hover:bg-wiggle-blue hover:text-white disabled:opacity-50 dark:text-sky-300 dark:hover:text-white"
-            >
+            <button type="button" onClick={onAnotherTake} disabled={busy} className={secondaryButton}>
               Try another take
             </button>
           </div>
         )}
       </section>
 
-      <section className="mt-12">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-muted">Recent</h2>
+      <section className="mt-14">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-ink-muted">Recent</h2>
         <GalleryStrip />
       </section>
     </main>
   )
 }
 
+function Panel({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return <div className={`rounded-xl border border-line bg-well px-4 py-3 ${className}`}>{children}</div>
+}
+
 function StatusLine({ children, spinner }: { children: React.ReactNode; spinner?: boolean }) {
   return (
-    <p className="flex items-center gap-2 text-sm text-ink-muted">
+    <p className="flex items-center gap-2.5 text-sm text-ink-muted">
       {spinner && (
-        <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-line border-t-wiggle-red dark:border-t-wiggle-yellow" aria-hidden />
+        <span
+          className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-line-strong border-t-ink"
+          aria-hidden
+        />
       )}
       {children}
     </p>

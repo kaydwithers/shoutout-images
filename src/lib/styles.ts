@@ -5,8 +5,6 @@ export interface ArtStyle {
   label: string
   /** Appended to every image prompt so the look stays consistent within a style. */
   prompt: string
-  /** Tailwind classes for the style badge on result cards. */
-  badge: string
 }
 
 export const STYLES: ArtStyle[] = [
@@ -15,21 +13,18 @@ export const STYLES: ArtStyle[] = [
     label: 'Clay figurine',
     prompt:
       'Playful 3D clay figurine render, handmade plasticine texture with visible fingerprints, soft studio lighting, bright pastel seamless background, shallow depth of field, charming and slightly goofy.',
-    badge: 'bg-wiggle-purple text-white',
   },
   {
     id: 'vector',
     label: 'Flat vector',
     prompt:
       'Bold flat vector illustration, thick clean outlines, limited bright palette of five colours, simple geometric shapes, sticker-like composition on a solid background, playful and energetic.',
-    badge: 'bg-wiggle-blue text-white',
   },
   {
     id: 'comic',
     label: 'Retro comic',
     prompt:
       'Retro pop-art comic panel, Ben-Day halftone dots, heavy black ink outlines, saturated primary colours, dynamic action lines, 1960s comic book print texture. No speech bubbles, no lettering.',
-    badge: 'bg-wiggle-red text-white',
   },
 ]
 

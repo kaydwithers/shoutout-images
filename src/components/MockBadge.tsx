@@ -11,20 +11,18 @@ export function MockBadge() {
   if (data.mock) {
     return (
       <div
-        className="flex items-center gap-2 rounded-lg border border-wiggle-yellow/70 bg-wiggle-yellow/15 px-3 py-2 text-sm text-ink"
+        className="flex flex-wrap items-center gap-x-2.5 gap-y-1 rounded-lg border border-line bg-well px-3 py-2 text-sm text-ink-muted"
         title={data.mockReason ?? undefined}
       >
-        <span className="rounded bg-wiggle-yellow px-1.5 py-0.5 text-xs font-black tracking-wide text-ink dark:text-[#2a1a3d]">MOCK</span>
-        <span>
-          Placeholder images only. {data.mockReason}.
-        </span>
+        <span className="rounded-md bg-accent px-1.5 py-0.5 text-xs font-bold uppercase tracking-wide text-accent-ink">Mock</span>
+        <span>Placeholder images only. {data.mockReason}.</span>
       </div>
     )
   }
   return (
-    <div className="text-xs text-ink-faint">
+    <p className="text-sm text-ink-muted">
       Live: concepts via {data.conceptProvider === 'anthropic' ? 'Claude' : 'OpenAI'}, images via {data.imageModel} ({data.imageSize},{' '}
       {data.imageQuality}).
-    </div>
+    </p>
   )
 }

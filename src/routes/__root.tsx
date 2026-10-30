@@ -7,6 +7,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
+import { SiteHeader } from '../components/SiteHeader'
 import { THEME_INIT_SCRIPT } from '../components/ThemeToggle'
 
 import appCss from '../styles.css?url'
@@ -56,8 +57,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="min-h-screen bg-page text-ink antialiased transition-colors">
-        <div className="wiggle-stripe h-2 w-full" aria-hidden />
+      <body className="min-h-screen bg-page text-ink antialiased">
+        <SiteHeader />
         {children}
         <TanStackDevtools
           config={{

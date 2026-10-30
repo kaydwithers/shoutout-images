@@ -3,50 +3,52 @@
 /* Dark mode is toggled by a `dark` class on <html>, not by the OS setting alone. */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Satoshi (loaded from Fontshare in __root.tsx) becomes Tailwind's default sans font. */
 @theme {
   --font-sans: 'Satoshi', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* The four skivvy colours. Fixed in both modes. */
-@theme {
-  --color-wiggle-red: #e4002b;
-  --color-wiggle-yellow: #ffcd00;
-  --color-wiggle-blue: #0072ce;
-  --color-wiggle-purple: #702f8a;
-}
-
-/* Semantic surfaces and text. Swap per mode so components stay free of dark: noise. */
+/*
+ * Semantic tokens. Warm neutrals, one accent used sparingly (focus rings, links),
+ * and a near-black primary action in light mode that flips to near-white in dark.
+ */
 :root {
   color-scheme: light;
-  --page: #fff8e7;
+  --page: #f7f6f3;
   --card: #ffffff;
   --field: #ffffff;
-  --well: #fff3d6;
-  --line: #f1dca8;
-  --ink: #2a1a3d;
-  --ink-muted: #6b5a7e;
-  --ink-faint: #9b8bad;
-  --accent: var(--color-wiggle-red);
-  --accent-hover: #b80022;
+  --well: #f1efea;
+  --line: #e4e1db;
+  --line-strong: #c9c5bd;
+  --ink: #1a1816;
+  --ink-muted: #5f5a52;
+  --ink-faint: #8b857b;
+  --primary: #1a1816;
+  --primary-hover: #33302b;
+  --primary-ink: #ffffff;
+  --accent: #b45309;
   --accent-ink: #ffffff;
-  --focus: var(--color-wiggle-blue);
+  --danger: #b42318;
+  --danger-soft: #fdecea;
 }
 
 .dark {
   color-scheme: dark;
-  --page: #140b26;
-  --card: #1f1238;
-  --field: #170d2c;
-  --well: #281747;
-  --line: #3d2a63;
-  --ink: #f7f1ff;
-  --ink-muted: #c4b5dc;
-  --ink-faint: #8f7fab;
-  --accent: var(--color-wiggle-yellow);
-  --accent-hover: #ffdd4d;
-  --accent-ink: #2a1a3d;
-  --focus: var(--color-wiggle-yellow);
+  --page: #121110;
+  --card: #1b1917;
+  --field: #161412;
+  --well: #22201d;
+  --line: #2d2a26;
+  --line-strong: #46423c;
+  --ink: #f3f1ec;
+  --ink-muted: #aaa49a;
+  --ink-faint: #7a746b;
+  --primary: #f3f1ec;
+  --primary-hover: #ffffff;
+  --primary-ink: #121110;
+  --accent: #f59e0b;
+  --accent-ink: #121110;
+  --danger: #f87171;
+  --danger-soft: #2a1715;
 }
 
 @theme inline {
@@ -55,13 +57,17 @@
   --color-field: var(--field);
   --color-well: var(--well);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
   --color-ink-faint: var(--ink-faint);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-ink: var(--primary-ink);
   --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
   --color-accent-ink: var(--accent-ink);
-  --color-focus: var(--focus);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
 }
 
 * {
@@ -76,15 +82,20 @@ body,
 
 body {
   margin: 0;
+  font-feature-settings: 'ss01', 'cv01';
 }
 
-/* Red, yellow, blue, purple stripe used at the top of the page. */
-.wiggle-stripe {
-  background: linear-gradient(
-    90deg,
-    var(--color-wiggle-red) 0 25%,
-    var(--color-wiggle-yellow) 25% 50%,
-    var(--color-wiggle-blue) 50% 75%,
-    var(--color-wiggle-purple) 75% 100%
-  );
+/* One consistent, visible focus style for keyboard users. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

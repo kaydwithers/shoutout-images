@@ -1,10 +1,17 @@
 import { getStyle, type StyleId } from '#/lib/styles'
 
-export function StyleBadge({ styleId, className = '' }: { styleId: StyleId; className?: string }) {
-  const style = getStyle(styleId)
+/** Small neutral label used over images and in panels. */
+export function Tag({ children, title }: { children: React.ReactNode; title?: string }) {
   return (
-    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${style.badge} ${className}`}>
-      {style.label}
+    <span
+      title={title}
+      className="inline-flex items-center rounded-md border border-line bg-card/95 px-2 py-0.5 text-xs font-medium text-ink"
+    >
+      {children}
     </span>
   )
+}
+
+export function StyleBadge({ styleId }: { styleId: StyleId }) {
+  return <Tag>{getStyle(styleId).label}</Tag>
 }
