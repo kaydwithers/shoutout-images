@@ -35,6 +35,10 @@
   --accent-ink: #ffffff;
   --danger: #000000;
   --danger-soft: #f2f2f2;
+  /* The one bright colour, reserved for the Generate button. */
+  --brand: #ffe500;
+  --brand-hover: #ffd400;
+  --brand-ink: #000000;
 }
 
 .dark {
@@ -55,6 +59,9 @@
   --accent-ink: #000000;
   --danger: #ffffff;
   --danger-soft: #141414;
+  --brand: #ffe500;
+  --brand-hover: #ffd400;
+  --brand-ink: #000000;
 }
 
 @theme inline {
@@ -74,6 +81,9 @@
   --color-accent-ink: var(--accent-ink);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-ink: var(--brand-ink);
 }
 
 * {
