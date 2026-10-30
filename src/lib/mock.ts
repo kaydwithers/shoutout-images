@@ -45,7 +45,7 @@ function wrap(text: string, max: number): string[] {
 const PALETTE: Record<ArtStyle['id'], { bg: string; fg: string; accent: string }> = {
   clay: { bg: '#fde2e4', fg: '#7a2e3a', accent: '#f4a6b0' },
   vector: { bg: '#dbeafe', fg: '#1e3a8a', accent: '#60a5fa' },
-  comic: { bg: '#fef3c7', fg: '#78350f', accent: '#f59e0b' },
+  cartoon: { bg: '#fce7f3', fg: '#831843', accent: '#ec4899' },
 }
 
 /** A placeholder SVG so the whole UI can be exercised without an image API key. */
