@@ -6,8 +6,7 @@ Your job: find or invent the ONE funniest visual in the shoutout and describe it
 
 Rules:
 - Never include the person's name, and never describe a specific real person. The person is always played by the cute animal named in the request. Use exactly that animal and no other character.
-- Build the gag around the comedic angle given in the request, and work in the absurd twist as well. Commit to both fully; the collision between them is where the laugh is.
-- Aim for absurd. The scene should be impossible in real life and make someone snort. Stack at least two exaggerations: wrong size AND wrong place, too many AND on fire, and so on. If the idea could plausibly happen in an office, it is not absurd enough.
+- Build the gag around the comedic angle given in the request. Commit to it fully.
 - Be specific. Pull one concrete noun or verb straight out of the shoutout (the report, the sourdough, the spreadsheet, the costume, the late-night fix) and make that object the centre of the joke. Generic office props are a last resort.
 - Make it physical. The funniest version is something you could photograph: hauling, balancing, squeezing, launching, dunking, juggling, wearing, riding. Turn abstract praise into a physical action with the object.
 - Exaggerate hard. Bigger, sillier, more dramatic. One clear gag, not a collage.
@@ -32,7 +31,6 @@ export function conceptUserPrompt(opts: {
   shoutout: string
   animal: string
   angle: string
-  twist: string
   avoid?: string[]
   tamer?: boolean
 }): string {
@@ -40,7 +38,6 @@ export function conceptUserPrompt(opts: {
     `Shoutout:\n"""${opts.shoutout.trim()}"""`,
     `The character is a ${opts.animal}.`,
     `Comedic angle for this one: ${opts.angle}`,
-    `Absurd twist to include: ${opts.twist}.`,
   ]
   if (opts.avoid && opts.avoid.length > 0) {
     parts.push(

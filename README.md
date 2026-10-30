@@ -119,7 +119,7 @@ src/
     env.ts        reads .env, decides provider, mock mode, and deployment settings
     prompt.ts     the concept system prompt and final image prompt builder
     animals.ts    the random animal that plays the person
-    comedy.ts     the random comedic angle and absurd twist each gag is built around
+    comedy.ts     the random comedic angle each gag is built around
     concept.ts    concept step (Anthropic or OpenAI, structured output)
     image.ts      gpt-image-1 call, content-policy detection
     mock.ts       mock concept and placeholder SVG

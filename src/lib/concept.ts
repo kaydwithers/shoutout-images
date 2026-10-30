@@ -18,8 +18,6 @@ export interface ConceptOptions {
   animal: string
   /** The comedic angle to build the gag around. Picked at random by the caller. */
   angle: string
-  /** An absurd twist stacked on top of the angle. Picked at random by the caller. */
-  twist: string
   avoid?: string[]
   tamer?: boolean
 }
