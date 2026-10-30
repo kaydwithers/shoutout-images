@@ -123,7 +123,7 @@ function Home() {
       <div className="mb-8 space-y-3">
         <h1 className="text-2xl font-bold tracking-tight text-ink">Turn a shoutout into a picture.</h1>
         <p className="max-w-prose text-ink-muted">
-          Paste a workplace shoutout. We find the visual gag in it and paint it in one of three house styles.
+          Someone did something great. Let's make it adorable.
         </p>
         <MockBadge />
       </div>
