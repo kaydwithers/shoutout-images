@@ -40,9 +40,9 @@ type StyleChoice = StyleId | 'random'
 type Phase = 'idle' | 'concept' | 'image' | 'done' | 'error'
 
 const primaryButton =
-  'inline-flex h-10 items-center justify-center rounded-lg bg-primary px-4 font-semibold text-primary-ink transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50'
+  'inline-flex h-10 items-center justify-center rounded-lg bg-primary px-4 font-semibold text-primary-ink hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50'
 const secondaryButton =
-  'inline-flex h-10 items-center justify-center rounded-lg border border-line bg-card px-4 font-semibold text-ink transition-colors hover:border-line-strong hover:bg-well disabled:cursor-not-allowed disabled:opacity-50'
+  'inline-flex h-10 items-center justify-center rounded-lg border border-line bg-card px-4 font-semibold text-ink hover:border-line-strong hover:bg-well disabled:cursor-not-allowed disabled:opacity-50'
 
 function Home() {
   const queryClient = useQueryClient()
@@ -138,7 +138,7 @@ function Home() {
             maxLength={600}
             disabled={busy}
             placeholder="Shoutout to Sam for bringing homemade sourdough to every single standup this month."
-            className="w-full resize-y rounded-lg border border-line bg-field px-3.5 py-3 leading-relaxed text-ink placeholder:text-ink-faint transition-colors hover:border-line-strong focus:border-line-strong focus:outline-none disabled:opacity-60"
+            className="w-full resize-y rounded-lg border border-line bg-field px-3.5 py-3 leading-relaxed text-ink placeholder:text-ink-faint hover:border-line-strong focus:border-line-strong focus:outline-none disabled:opacity-60"
           />
         </label>
 
@@ -149,7 +149,7 @@ function Home() {
               value={styleChoice}
               onChange={(e) => setStyleChoice(e.target.value as StyleChoice)}
               disabled={busy}
-              className="h-10 rounded-lg border border-line bg-field px-3 pr-8 text-ink transition-colors hover:border-line-strong focus:border-line-strong focus:outline-none disabled:opacity-60"
+              className="h-10 rounded-lg border border-line bg-field px-3 pr-8 text-ink hover:border-line-strong focus:border-line-strong focus:outline-none disabled:opacity-60"
             >
               <option value="random">Random</option>
               {STYLES.map((s) => (

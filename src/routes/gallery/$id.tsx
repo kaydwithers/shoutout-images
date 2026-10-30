@@ -3,7 +3,7 @@ import { ResultCard } from '#/components/ResultCard'
 import { getGalleryItem } from '#/server/shoutout'
 
 const backLink =
-  'inline-flex items-center gap-1.5 rounded-sm font-medium text-ink-muted transition-colors hover:text-ink'
+  'inline-flex items-center gap-1.5 rounded-sm font-medium text-ink-muted hover:text-ink'
 
 export const Route = createFileRoute('/gallery/$id')({
   loader: async ({ params }) => {

@@ -42,7 +42,7 @@ export function ResultCard({ record, showDetailLink = true }: { record: Shoutout
             type="button"
             onClick={onDownload}
             disabled={downloading}
-            className="inline-flex h-10 items-center justify-center rounded-lg bg-primary px-4 font-semibold text-primary-ink transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex h-10 items-center justify-center rounded-lg bg-primary px-4 font-semibold text-primary-ink hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
           >
             {downloading ? 'Preparing…' : 'Download with caption'}
           </button>
@@ -50,7 +50,7 @@ export function ResultCard({ record, showDetailLink = true }: { record: Shoutout
             <Link
               to="/gallery/$id"
               params={{ id: record.id }}
-              className="rounded-sm font-medium text-ink-muted underline decoration-line-strong underline-offset-4 transition-colors hover:text-ink hover:decoration-ink"
+              className="rounded-sm font-medium text-ink-muted underline decoration-line-strong underline-offset-4 hover:text-ink hover:decoration-ink"
             >
               View details
             </Link>

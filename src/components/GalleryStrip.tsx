@@ -26,7 +26,7 @@ export function GalleryStrip() {
             to="/gallery/$id"
             params={{ id: r.id }}
             title={r.concept}
-            className="block overflow-hidden rounded-lg border border-line bg-well transition-colors hover:border-line-strong"
+            className="block overflow-hidden rounded-lg border border-line bg-well hover:border-line-strong"
           >
             <img src={`/api/images/${r.imageFile}`} alt={r.concept} loading="lazy" className="aspect-square w-full object-cover" />
           </Link>

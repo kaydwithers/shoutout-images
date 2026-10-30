@@ -29,7 +29,7 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
       onClick={toggleTheme}
       aria-label="Toggle dark mode"
       title="Toggle dark mode"
-      className={`inline-flex h-9 w-9 items-center justify-center rounded-md border border-line bg-card text-ink-muted transition-colors hover:border-line-strong hover:text-ink ${className}`}
+      className={`inline-flex h-9 w-9 items-center justify-center rounded-md border border-line bg-card text-ink-muted hover:border-line-strong hover:text-ink ${className}`}
     >
       <SunIcon className="hidden h-4 w-4 dark:block" />
       <MoonIcon className="h-4 w-4 dark:hidden" />
