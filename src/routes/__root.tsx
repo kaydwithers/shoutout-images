@@ -7,6 +7,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
+import { THEME_INIT_SCRIPT } from '../components/ThemeToggle'
 
 import appCss from '../styles.css?url'
 
@@ -42,11 +43,14 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    // The theme script may add `dark` before React hydrates, so ignore that mismatch.
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="min-h-screen bg-gray-100 text-gray-900 antialiased">
+      <body className="min-h-screen bg-page text-ink antialiased transition-colors">
+        <div className="wiggle-stripe h-2 w-full" aria-hidden />
         {children}
         <TanStackDevtools
           config={{

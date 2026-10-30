@@ -15,6 +15,8 @@ Personal prototype. Runs locally, or on Render or Railway behind a password (see
 
 If the image model refuses a prompt, the app silently asks for a tamer concept once, then shows an error.
 
+The page is themed in the four Wiggles skivvy colours (red, yellow, blue, purple) and has a light and dark mode. The sun/moon button in the header toggles it; the choice is remembered in the browser and otherwise follows the OS setting.
+
 ## Setup
 
 ### 1. Install
@@ -131,11 +133,16 @@ src/
     api/images/$file.ts  serves files from generated/
     healthz.ts           unauthenticated liveness check
 render.yaml              Render Blueprint (free web service)
-  components/            ResultCard, GalleryStrip, StyleBadge, MockBadge
+  components/            ResultCard, GalleryStrip, StyleBadge, MockBadge, ThemeToggle
+  styles.css             Tailwind entry, Wiggles palette, light/dark colour tokens
 generated/               output, gitignored
 ```
 
 Stack: TanStack Start, TanStack Router, TanStack Query, React 19, Tailwind v4, TypeScript end to end.
+
+## Tweaking the colours
+
+Light and dark palettes live in `src/styles.css` as CSS variables (`--page`, `--card`, `--ink`, `--accent`, and so on), exposed to Tailwind as `bg-page`, `text-ink`, `bg-accent`, etc. The four brand colours are `wiggle-red`, `wiggle-yellow`, `wiggle-blue`, `wiggle-purple`. Dark mode is the `dark` class on `<html>`, toggled by `src/components/ThemeToggle.tsx`.
 
 ## Tweaking the humour
 

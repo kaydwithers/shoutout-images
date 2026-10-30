@@ -1,5 +1,63 @@
-
 @import "tailwindcss";
+
+/* Dark mode is toggled by a `dark` class on <html>, not by the OS setting alone. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* The four skivvy colours. Fixed in both modes. */
+@theme {
+  --color-wiggle-red: #e4002b;
+  --color-wiggle-yellow: #ffcd00;
+  --color-wiggle-blue: #0072ce;
+  --color-wiggle-purple: #702f8a;
+}
+
+/* Semantic surfaces and text. Swap per mode so components stay free of dark: noise. */
+:root {
+  color-scheme: light;
+  --page: #fff8e7;
+  --card: #ffffff;
+  --field: #ffffff;
+  --well: #fff3d6;
+  --line: #f1dca8;
+  --ink: #2a1a3d;
+  --ink-muted: #6b5a7e;
+  --ink-faint: #9b8bad;
+  --accent: var(--color-wiggle-red);
+  --accent-hover: #b80022;
+  --accent-ink: #ffffff;
+  --focus: var(--color-wiggle-blue);
+}
+
+.dark {
+  color-scheme: dark;
+  --page: #140b26;
+  --card: #1f1238;
+  --field: #170d2c;
+  --well: #281747;
+  --line: #3d2a63;
+  --ink: #f7f1ff;
+  --ink-muted: #c4b5dc;
+  --ink-faint: #8f7fab;
+  --accent: var(--color-wiggle-yellow);
+  --accent-hover: #ffdd4d;
+  --accent-ink: #2a1a3d;
+  --focus: var(--color-wiggle-yellow);
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-card: var(--card);
+  --color-field: var(--field);
+  --color-well: var(--well);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(--accent-ink);
+  --color-focus: var(--focus);
+}
 
 * {
   box-sizing: border-box;
@@ -15,3 +73,13 @@ body {
   margin: 0;
 }
 
+/* Red, yellow, blue, purple stripe used at the top of the page. */
+.wiggle-stripe {
+  background: linear-gradient(
+    90deg,
+    var(--color-wiggle-red) 0 25%,
+    var(--color-wiggle-yellow) 25% 50%,
+    var(--color-wiggle-blue) 50% 75%,
+    var(--color-wiggle-purple) 75% 100%
+  );
+}
